@@ -300,6 +300,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         TrafficStats.setThreadStatsTag(THREAD_ID);
         workAroundGoogleMapsBug();
         final SharedPreferences prefs = getSharedPreferences(PreferenceKeys.SHARED_PREFS, Context.MODE_PRIVATE);
+        CiVisualFixtures.configurePreferences(this, prefs);
 
         ThemeUtil.setTheme(prefs);
         mainActivity = this;
@@ -456,6 +457,8 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             }
         }
 
+        final boolean ciVisualMode = CiVisualFixtures.enabled(getIntent());
+
         Logging.info("MAIN: setupService");
         setupService();
         Logging.info("MAIN: checkStorage");
@@ -467,9 +470,13 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         Logging.info("MAIN: setupScreenStateReceiver");
         setupScreenStateReceiver();
         Logging.info("MAIN: setupSound");
-        setupSound();
+        if (!ciVisualMode) {
+            setupSound();
+        }
         Logging.info("MAIN: setupActivationDialog");
-        setupActivationDialog(prefs);
+        if (!ciVisualMode) {
+            setupActivationDialog(prefs);
+        }
         Logging.info("MAIN: setupBluetooth");
         setupBluetooth(prefs);
         Logging.info("MAIN: setupWifi");
@@ -481,6 +488,11 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             setupFragments();
         }
         setupFilters(prefs);
+        if (ciVisualMode) {
+            getSupportFragmentManager().executePendingTransactions();
+            state.currentTab = CiVisualFixtures.requestedNavId(getIntent());
+            CiVisualFixtures.seedUi(this, state);
+        }
 
         Logging.info("MAIN: first install check");
         // ALIBI: don't inherit MxC implant failures from backups.
@@ -504,8 +516,18 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         // rksh 20160202 - api/authuser secure preferences storage
         checkInitKeystore(prefs);
 
-        // show the list by default
+        // show the selected screen
         selectFragment(state.currentTab);
+        if (ciVisualMode) {
+            new Handler().postDelayed(() -> {
+                try {
+                    getSupportFragmentManager().executePendingTransactions();
+                    CiVisualFixtures.seedUi(MainActivity.this, state);
+                } catch (RuntimeException ex) {
+                    Logging.warn("CI visual refresh failed: " + ex.getClass().getSimpleName());
+                }
+            }, 1200L);
+        }
         Logging.info("MAIN: onCreate setup complete");
     }
 
