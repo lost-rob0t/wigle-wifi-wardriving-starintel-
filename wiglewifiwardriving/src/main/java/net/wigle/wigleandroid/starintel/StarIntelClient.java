@@ -44,7 +44,18 @@ public final class StarIntelClient {
                 token
         ).build();
         try (Response response = client.newCall(request).execute()) {
-            return response.isSuccessful();
+            if (!response.isSuccessful()) return false;
+            if (response.code() == 202 || response.body() == null) return true;
+
+            final String responseBody = response.body().string();
+            if (responseBody == null || responseBody.trim().isEmpty()) return true;
+            try {
+                final JSONObject outcome = new JSONObject(responseBody);
+                return outcome.optInt("failed", 0) == 0;
+            } catch (Exception ignored) {
+                // A successful legacy/compatible response without the inline outcome is accepted.
+                return true;
+            }
         }
     }
 
