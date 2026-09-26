@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/address_filter_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#09111B"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="14dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MAC / OUI Watchlist"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#F7FAFC"
+        android:fontFamily="sans-serif-medium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="18dp"
+        android:text="Trigger a StarIntel alert when a watched transmitter is observed nearby."
+        android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
+        android:textColor="#A9B6C6" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#111C29"
+        app:cardCornerRadius="18dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#24364A"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADD WATCH RULE"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:textColor="#70D7FF" />
+
+            <LinearLayout
+                android:id="@+id/control_mac_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
+                    android:id="@+id/mac_address_input"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="#F7FAFC"
+                    android:textColorHint="#6F8194"
+                    android:backgroundTint="#47627A"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:textAllCaps="true"
+                    android:hint="AA:BB:CC:DD:EE:FF"
+                    mask:allowed_chars="1234567890ABCDEFabcdef"
+                    mask:mask="##:##:##:##:##:##" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:minWidth="88dp"
+                    android:text="Add MAC"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:onClick="addMac"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/control_oui_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
+                    android:id="@+id/oui_input"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="#F7FAFC"
+                    android:textColorHint="#6F8194"
+                    android:backgroundTint="#47627A"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:textAllCaps="true"
+                    android:hint="AA:BB:CC"
+                    mask:allowed_chars="1234567890ABCDEFabcdef"
+                    mask:mask="##:##:##" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:minWidth="88dp"
+                    android:text="Add OUI"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:onClick="addOui"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WATCHED ADDRESSES"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:textColor="#70D7FF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Exact MACs and OUI prefixes"
+                android:textSize="13sp"
+                android:textColor="#8495A8" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/scanAddress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="Add from scan"
+            android:src="@drawable/scan_text"
+            android:padding="12dp"
+            android:background="@drawable/starintel_round_button"
+            app:tint="#09111B" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/addr_filter_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="10dp"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/address_filter_settings_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/finish_address_filter"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Done"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:cornerRadius="16dp" />
+    </LinearLayout>
+</LinearLayout>
