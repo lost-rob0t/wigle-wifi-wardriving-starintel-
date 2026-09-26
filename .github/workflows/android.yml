@@ -7,7 +7,9 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   build:
@@ -48,3 +50,188 @@ jobs:
           path: |
             wiglewifiwardriving/build/outputs/apk/debug/*.apk
             starintelwear/build/outputs/apk/debug/*.apk
+
+  visual:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download built APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: starintel-wigle-android-debug
+          path: artifacts
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          mkdir -p screenshots
+
+      - name: Capture phone screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          cores: 2
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            set -euo pipefail
+            PHONE_APK="$(find artifacts -type f -name 'wiglewifiwardriving-debug.apk' -print -quit)"
+            test -n "$PHONE_APK"
+            adb install -r "$PHONE_APK"
+            adb shell svc wifi enable || true
+            for permission in \
+              android.permission.ACCESS_FINE_LOCATION \
+              android.permission.ACCESS_COARSE_LOCATION \
+              android.permission.POST_NOTIFICATIONS \
+              android.permission.BLUETOOTH_SCAN \
+              android.permission.BLUETOOTH_CONNECT; do
+              adb shell pm grant net.wigle.wigleandroid "$permission" || true
+            done
+
+            capture_main() {
+              screen="$1"
+              adb shell am force-stop net.wigle.wigleandroid
+              adb shell am start -W \
+                -n net.wigle.wigleandroid/.MainActivity \
+                --ez ci_visual true \
+                --es ci_visual_screen "$screen"
+              sleep 5
+              adb exec-out screencap -p > "screenshots/phone-${screen}.png"
+            }
+
+            capture_main list
+            capture_main dash
+            capture_main starintel
+            capture_main map
+
+            adb shell am force-stop net.wigle.wigleandroid
+            adb shell am start -W \
+              -n net.wigle.wigleandroid/.MacFilterActivity \
+              --es net.wigle.wigleandroid.filter.MESSAGE alertFilter \
+              --ez ci_visual true
+            sleep 4
+            adb exec-out screencap -p > screenshots/phone-watchlist.png
+
+      - name: Capture Wear OS screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: android-wear
+          arch: x86_64
+          profile: wearos_large_round
+          cores: 2
+          ram-size: 3072M
+          disable-animations: true
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: |
+            set -euo pipefail
+            WEAR_APK="$(find artifacts -type f -name 'starintelwear-debug.apk' -print -quit)"
+            test -n "$WEAR_APK"
+            adb install -r "$WEAR_APK"
+            adb shell pm grant net.wigle.wigleandroid android.permission.POST_NOTIFICATIONS || true
+            adb shell am start -W \
+              -n net.wigle.wigleandroid/net.wigle.wigleandroid.starintelwear.MainActivity \
+              --ez ci_visual true
+            sleep 5
+            adb exec-out screencap -p > screenshots/wear-dashboard.png
+            adb shell input swipe 220 330 220 120 350 || true
+            sleep 2
+            adb exec-out screencap -p > screenshots/wear-nearby.png
+
+      - name: Upload visual CI screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-visual-ci-pr-${{ github.event.pull_request.number }}
+          if-no-files-found: error
+          path: screenshots/*.png
+
+      - name: Publish stable screenshot URLs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          SNAPSHOT_BRANCH="ci-screenshots-pr-${PR_NUMBER}"
+          SNAPSHOT_DIR="pr-${PR_NUMBER}"
+          TMP="$(mktemp -d)"
+
+          git clone --quiet "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${TMP}/repo"
+          cd "${TMP}/repo"
+          git checkout --orphan "${SNAPSHOT_BRANCH}"
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p "${SNAPSHOT_DIR}"
+          cp "${GITHUB_WORKSPACE}"/screenshots/*.png "${SNAPSHOT_DIR}/"
+          cat > "${SNAPSHOT_DIR}/README.md" <<EOF
+          # Android visual CI — PR #${PR_NUMBER}
+
+          Generated from ${GITHUB_SHA} by Actions run ${GITHUB_RUN_ID}.
+          EOF
+
+          git add "${SNAPSHOT_DIR}"
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "visual-ci: PR #${PR_NUMBER} ${GITHUB_SHA}"
+          git push --force origin "HEAD:${SNAPSHOT_BRANCH}"
+
+      - name: Post screenshots to pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- starintel-android-visual-ci -->"
+          REF="ci-screenshots-pr-${PR_NUMBER}"
+          RAW="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${REF}/pr-${PR_NUMBER}"
+          RUN_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          BODY="$(cat <<EOF
+          ${MARKER}
+          ## Android visual CI
+
+          Built from \`${GITHUB_SHA}\`. These are emulator screenshots of the actual debug APKs produced by this PR.
+
+          ### Phone — live list
+          ![Phone list](${RAW}/phone-list.png)
+
+          ### Phone — dashboard
+          ![Phone dashboard](${RAW}/phone-dash.png)
+
+          ### Phone — StarIntel ingest + watch controls
+          ![Phone StarIntel](${RAW}/phone-starintel.png)
+
+          ### Phone — MAC/OUI watchlist
+          ![Phone watchlist](${RAW}/phone-watchlist.png)
+
+          ### Phone — map
+          ![Phone map](${RAW}/phone-map.png)
+
+          ### Wear OS — dashboard, map, alert + stats
+          ![Wear dashboard](${RAW}/wear-dashboard.png)
+
+          ### Wear OS — nearby networks
+          ![Wear nearby](${RAW}/wear-nearby.png)
+
+          [Download all screenshots / inspect the Actions run](${RUN_URL})
+          EOF
+          )"
+
+          COMMENT_ID="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" --paginate \
+            --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -n1 || true)"
+
+          if [[ -n "${COMMENT_ID}" ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID}" -f body="${BODY}" >/dev/null
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" -f body="${BODY}" >/dev/null
+          fi
