@@ -50,6 +50,8 @@ public class MacFilterActivity extends ScreenChildActivity {
         String filterType = intent.getStringExtra(FilterActivity.ADDR_FILTER_MESSAGE);
         if (FilterActivity.INTENT_BLE_MFGR_ID_ALERT.equals(filterType)) {
             setContentView(R.layout.ble_mfgr_filter_settings);
+        } else if (FilterActivity.INTENT_ALERT_FILTER.equals(filterType)) {
+            setContentView(R.layout.starintel_watchlist);
         } else {
             setContentView(R.layout.addressfiltersettings);
         }
