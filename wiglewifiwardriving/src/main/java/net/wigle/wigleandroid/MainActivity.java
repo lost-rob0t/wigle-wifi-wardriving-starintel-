@@ -2295,6 +2295,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             // have to use the app context to bind to the service, cuz we're in tabs
             // http://code.google.com/p/android/issues/detail?id=2483#c2
             final Intent serviceIntent = new Intent(getApplicationContext(), WigleService.class);
+            ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
             final boolean bound = getApplicationContext().bindService(serviceIntent, state.serviceConnection,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
             Logging.info("\tservice bound: " + bound);
