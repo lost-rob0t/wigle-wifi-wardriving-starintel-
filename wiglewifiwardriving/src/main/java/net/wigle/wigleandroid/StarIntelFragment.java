@@ -107,6 +107,25 @@ public final class StarIntelFragment extends Fragment {
         });
         root.addView(watchlist);
 
+        final Button importExisting = button("Ingest existing WiGLE database");
+        importExisting.setOnClickListener(v -> {
+            save();
+            final MainActivity.State state = MainActivity.getStaticState();
+            final net.wigle.wigleandroid.db.DatabaseHelper db =
+                    state == null ? null : state.dbHelper;
+            renderStatus("Starting existing database import…");
+            runtime.importExistingWifi(db, (networks, observations, queued, done, message) -> {
+                if (getActivity() == null) return;
+                requireActivity().runOnUiThread(() ->
+                        status.setText(
+                                message + "  •  networks: " + networks +
+                                "  •  observations: " + observations +
+                                "  •  queued: " + queued +
+                                (done ? "  •  done" : "")));
+            });
+        });
+        root.addView(importExisting);
+
         final Button flush = button("Flush queued documents now");
         flush.setOnClickListener(v -> {
             runtime.flushNow();
