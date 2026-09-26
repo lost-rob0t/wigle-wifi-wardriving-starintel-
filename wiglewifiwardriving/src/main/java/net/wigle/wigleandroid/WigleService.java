@@ -1,5 +1,7 @@
 package net.wigle.wigleandroid;
 
+import android.Manifest;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,6 +10,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +22,8 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
+import androidx.core.content.ContextCompat;
 
 import net.wigle.wigleandroid.ui.UINumberFormat;
 import net.wigle.wigleandroid.starintel.HeadlessWifiScanner;
@@ -34,6 +39,8 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE;
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE;
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
 import static android.os.Build.VERSION.SDK_INT;
 
 public final class WigleService extends Service {
@@ -289,15 +296,14 @@ public final class WigleService extends Service {
 
                 if (null != notification) {
                     try {
-                        if (isServiceForeground()) {
-                            final NotificationManager notificationManager =
-                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                            notificationManager.notify(NOTIFICATION_ID, notification);
-                        }
-                        else {
-                            Logging.info("service startForeground");
-                            startForeground(NOTIFICATION_ID, notification);
-                        }
+                        final int serviceTypes = activeForegroundServiceTypes();
+                        Logging.info("service start/update foreground types: " + serviceTypes);
+                        ServiceCompat.startForeground(
+                                this,
+                                NOTIFICATION_ID,
+                                notification,
+                                serviceTypes
+                        );
                     } catch (Exception ex) {
                         Logging.error("notification service error: ", ex);
                     }
@@ -308,6 +314,20 @@ public final class WigleService extends Service {
         } catch (Exception ex) {
             Logging.error("trapped notification exception out outer level - ",ex);
         }
+    }
+
+    private int activeForegroundServiceTypes() {
+        int types = FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE;
+        final boolean coarse =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+        final boolean fine =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
+        if (coarse || fine) {
+            types |= FOREGROUND_SERVICE_TYPE_LOCATION;
+        }
+        return types;
     }
 
     private boolean isServiceForeground() {
