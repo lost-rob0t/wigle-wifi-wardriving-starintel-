@@ -2,6 +2,7 @@ package net.wigle.wigleandroid.starintelwear;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,11 @@ public final class NearbyComplicationService extends ComplicationDataSourceServi
             @NonNull final ComplicationRequest request,
             @NonNull final ComplicationRequestListener listener
     ) {
-        listener.onComplicationData(build(request.getComplicationType(), false));
+        try {
+            listener.onComplicationData(build(request.getComplicationType(), false));
+        } catch (RemoteException ignored) {
+            // The watch face binder went away; a later request will refresh it.
+        }
     }
 
     @Nullable
