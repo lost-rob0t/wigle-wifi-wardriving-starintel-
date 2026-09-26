@@ -34,6 +34,7 @@ import java.util.Locale;
 /** Live StarIntel wrist dashboard: nearby Wi-Fi, geospatial map, watch hits, and stats. */
 public final class MainActivity extends AppCompatActivity {
     private static final String PATH_REQUEST_SNAPSHOT = "/starintel/request-snapshot";
+    private static final String EXTRA_CI_VISUAL = "ci_visual";
 
     private WearStateStore store;
     private TextView status;
@@ -54,8 +55,12 @@ public final class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         store = new WearStateStore(this);
         setContentView(buildUi());
-        maybeRequestNotifications();
-        requestSnapshot();
+        if (BuildConfig.DEBUG && getIntent().getBooleanExtra(EXTRA_CI_VISUAL, false)) {
+            seedCiVisualState();
+        } else {
+            maybeRequestNotifications();
+            requestSnapshot();
+        }
         render();
     }
 
@@ -205,6 +210,72 @@ public final class MainActivity extends AppCompatActivity {
         final String bssid = wigle == null ? "" : wigle.optString("bssid", "");
         alert.setText("⚠ WATCH " + severity + "\n" +
                 (ssid.isEmpty() ? "(hidden)" : ssid) + "\n" + bssid);
+    }
+
+    private void seedCiVisualState() {
+        try {
+            final long now = System.currentTimeMillis();
+            final JSONArray networks = new JSONArray()
+                    .put(network("DE:AD:BE:EF:10:01", "WATCHED-AP", -38, 2412, 1, 39.9619, -82.9987, now))
+                    .put(network("02:42:AC:11:00:05", "field-kit", -51, 5180, 36, 39.9624, -82.9978, now))
+                    .put(network("7C:DF:A1:44:22:10", "ops-uplink", -64, 5955, 1, 39.9608, -82.9993, now))
+                    .put(network("A0:B1:C2:D3:E4:F5", "coffee-guest", -72, 2462, 11, 39.9631, -82.9968, now))
+                    .put(network("12:34:56:78:9A:BC", "", -81, 5220, 44, 39.9599, -82.9971, now));
+
+            final JSONObject alertData = new JSONObject()
+                    .put("alert_type", "wireless-mac-in-range")
+                    .put("severity", 92)
+                    .put("status", "triggered")
+                    .put("triggered_at", java.time.Instant.ofEpochMilli(now).toString());
+            final JSONObject wigle = new JSONObject()
+                    .put("bssid", "DE:AD:BE:EF:10:01")
+                    .put("ssid", "WATCHED-AP")
+                    .put("signal_dbm", -38);
+            final JSONObject alert = new JSONObject()
+                    .put("_id", "starintel:alert:wigle-mac-watch:visual")
+                    .put("dtype", "alert")
+                    .put("data", alertData)
+                    .put("extensions", new JSONObject().put("wigle", wigle));
+
+            final JSONObject live = new JSONObject()
+                    .put("updated_at", now)
+                    .put("scanning", true)
+                    .put("run_networks", 127)
+                    .put("new_networks", 18)
+                    .put("database_networks", 12844)
+                    .put("watch_hits", 4)
+                    .put("watch_rules", 3)
+                    .put("queued_documents", 7)
+                    .put("networks", networks)
+                    .put("last_alert", alert);
+
+            store.putLive(live.toString());
+            store.putAlert(alert.toString());
+        } catch (Exception ignored) {
+            // Visual fixture failure should not affect the real Wear app path.
+        }
+    }
+
+    private static JSONObject network(
+            final String bssid,
+            final String ssid,
+            final int rssi,
+            final int frequency,
+            final int channel,
+            final double lat,
+            final double lon,
+            final long seenAt
+    ) throws org.json.JSONException {
+        return new JSONObject()
+                .put("bssid", bssid)
+                .put("ssid", ssid)
+                .put("rssi", rssi)
+                .put("frequency_mhz", frequency)
+                .put("channel", channel)
+                .put("lat", lat)
+                .put("lon", lon)
+                .put("accuracy_m", 4.2d)
+                .put("seen_at", seenAt);
     }
 
     private void requestSnapshot() {
