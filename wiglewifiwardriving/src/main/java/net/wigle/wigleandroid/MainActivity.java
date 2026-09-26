@@ -250,6 +250,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
     public static final boolean ENABLE_DEBUG_LOGGING = false;
 
     private static MainActivity mainActivity;
+    private boolean explicitExitRequested = false;
     private BatteryLevelReceiver batteryLevelReceiver;
     private BroadcastReceiver screenStateReceiver;
     private boolean playServiceShown = false;
@@ -883,7 +884,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
      */
     public void selectFragment(final int itemId) {
         if (itemId == R.id.nav_exit) {
-            finishSoon();
+            finishExplicitly();
             return;
         }
 
@@ -2763,6 +2764,11 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         return mDrawerToggle.onOptionsItemSelected(item);
     }
 
+    public void finishExplicitly() {
+        explicitExitRequested = true;
+        finishSoon();
+    }
+
     public void finishSoon() {
         this.state.wigleService = null;
         finishSoon(FINISH_TIME_MILLIS, false, false);
@@ -2863,11 +2869,17 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
                 }
             }
 
-            // stop the service, so when we die it's both stopped and unbound and will die
+            final boolean keepForegroundScanner =
+                    !explicitExitRequested && isScanning(getApplicationContext());
             final Intent serviceIntent = new Intent(this, WigleService.class);
-            stopService(serviceIntent);
+            if (keepForegroundScanner) {
+                Logging.info("MAIN: leaving foreground scanner service running");
+            } else {
+                Logging.info("MAIN: stopping foreground scanner service");
+                stopService(serviceIntent);
+            }
             try {
-                // have to use the app context to bind to the service, cuz we're in tabs
+                // Unbind the activity either way. A started service remains alive independently.
                 final Context c = getApplicationContext();
                 if (null != c) {
                     c.unbindService(state.serviceConnection);
