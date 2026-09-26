@@ -6,24 +6,45 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-    - name: Update API KEY from Secrets
-      env: 
-        MAPS_KEY: ${{ secrets.CI_DUMMY_MAPS_API_KEY }}
-      run: echo MAPS_API_KEY="$env:MAPS_KEY" > ./local.properties
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: Configure Android build
+        env:
+          MAPS_KEY: ${{ secrets.CI_DUMMY_MAPS_API_KEY }}
+        run: |
+          printf 'MAPS_API_KEY=%s\n' "${MAPS_KEY:-CI_DUMMY_MAPS_KEY}" > local.properties
+          chmod +x gradlew
+
+      - name: Compile, unit test, lint, and package phone + Wear OS
+        run: |
+          ./gradlew --stacktrace \
+            :wiglewifiwardriving:testDebugUnitTest \
+            :wiglewifiwardriving:lintDebug \
+            :wiglewifiwardriving:assembleDebug \
+            :starintelwear:lintDebug \
+            :starintelwear:assembleDebug
+
+      - name: Upload debug APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: starintel-wigle-android-debug
+          if-no-files-found: error
+          path: |
+            wiglewifiwardriving/build/outputs/apk/debug/*.apk
+            starintelwear/build/outputs/apk/debug/*.apk
