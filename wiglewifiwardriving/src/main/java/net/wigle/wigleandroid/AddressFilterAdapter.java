@@ -72,6 +72,8 @@ public class AddressFilterAdapter extends ArrayAdapter<String> implements ListAd
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (PreferenceKeys.PREF_ALERT_BLE_MFGR_IDS.equals(filterKey)) {
                 view = inflater.inflate(R.layout.ble_mfgr_id_filter_list_item, parent, false);
+            } else if (PreferenceKeys.PREF_ALERT_ADDRS.equals(filterKey)) {
+                view = inflater.inflate(R.layout.starintel_address_filter_list_item, parent, false);
             } else {
                 view = inflater.inflate(R.layout.address_filter_list_item, parent, false);
             }
