@@ -22,6 +22,7 @@ import net.wigle.wigleandroid.db.DatabaseHelper;
 import net.wigle.wigleandroid.ListFragment;
 import net.wigle.wigleandroid.MainActivity;
 import net.wigle.wigleandroid.model.LatLng;
+import net.wigle.wigleandroid.starintel.StarIntelRuntime;
 import net.wigle.wigleandroid.model.Network;
 import net.wigle.wigleandroid.ui.NetworkListUtil;
 import net.wigle.wigleandroid.ui.SetNetworkListAdapter;
@@ -208,6 +209,10 @@ public class WifiReceiver extends BroadcastReceiver {
         final Matcher bssidDbMatcher = mainActivity.getBssidFilterMatcher( PreferenceKeys.PREF_EXCLUDE_LOG_ADDRS );
         final Matcher bssidAlertMatcher = mainActivity.getBssidFilterMatcher( PreferenceKeys.PREF_ALERT_ADDRS );
 
+        // StarIntel uses scan-boundary events so watch rules fire on range entry, not every callback.
+        final StarIntelRuntime starIntelRuntime = StarIntelRuntime.get(context);
+        starIntelRuntime.beginWifiScan();
+
         // can be null on shutdown
         if ( results != null ) {
             resultSize = results.size();
@@ -325,6 +330,8 @@ public class WifiReceiver extends BroadcastReceiver {
                     }
                 }
 
+                starIntelRuntime.onWifiObservation(network, result, location);
+
                 final WiFiScanUpdater seenUpdater = updateOnSeen;
                 if (null != seenUpdater && null != safeWatchSsids && null != location) {
                     if (safeWatchSsids.contains(network.getBssid())) {
@@ -333,6 +340,8 @@ public class WifiReceiver extends BroadcastReceiver {
                 }
             }
         }
+
+        starIntelRuntime.endWifiScan();
 
         // check if there are more "New" nets
         final long newNetCount = dbHelper.getNewNetworkCount();
