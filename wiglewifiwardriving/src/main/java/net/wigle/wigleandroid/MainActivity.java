@@ -941,6 +941,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         if (itemId == R.id.nav_site_stats) return getString(R.string.site_stats_app_name);
         if (itemId == R.id.nav_stats) return getString(R.string.tab_stats);
         if (itemId == R.id.nav_uploads) return getString(R.string.uploads_app_name);
+        if (itemId == R.id.nav_starintel) return getString(R.string.starintel_watchlist);
         if (itemId == R.id.nav_settings) return getString(R.string.settings_app_name);
         if (itemId == R.id.nav_exit) return getString(R.string.menu_exit);
         return null;
@@ -1013,6 +1014,8 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             return NewsFragment.class;
         } else if (navId == R.id.nav_uploads) {
             return UploadsFragment.class;
+        } else if (navId == R.id.nav_starintel) {
+            return StarIntelFragment.class;
         } else if (navId == R.id.nav_settings) {
             return SettingsFragment.class;
         } else {
