@@ -30,8 +30,12 @@ public final class StarIntelClient {
     ) throws IOException {
         if (items == null || items.isEmpty()) return true;
         final JSONArray body = new JSONArray();
-        for (StarIntelOutbox.Item item : items) {
-            body.put(new JSONObject(item.payload));
+        try {
+            for (StarIntelOutbox.Item item : items) {
+                body.put(new JSONObject(item.payload));
+            }
+        } catch (Exception ex) {
+            throw new IOException("Invalid StarIntel outbox JSON", ex);
         }
         final Request request = authorized(
                 new Request.Builder()
