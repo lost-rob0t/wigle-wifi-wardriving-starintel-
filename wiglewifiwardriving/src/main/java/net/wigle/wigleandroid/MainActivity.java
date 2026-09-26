@@ -300,6 +300,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         TrafficStats.setThreadStatsTag(THREAD_ID);
         workAroundGoogleMapsBug();
         final SharedPreferences prefs = getSharedPreferences(PreferenceKeys.SHARED_PREFS, Context.MODE_PRIVATE);
+        final boolean ciVisualMode = CiVisualFixtures.enabled(getIntent());
         CiVisualFixtures.configurePreferences(this, prefs);
 
         ThemeUtil.setTheme(prefs);
@@ -348,7 +349,9 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
                 dl.setScrimColor(scrimColor);
             }
         }
-        setupPermissions();
+        if (!ciVisualMode) {
+            setupPermissions();
+        }
         setupMenuDrawer();
 
         // do some of our own error handling, write a file with the stack
@@ -457,8 +460,6 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             }
         }
 
-        final boolean ciVisualMode = CiVisualFixtures.enabled(getIntent());
-
         Logging.info("MAIN: setupService");
         setupService();
         Logging.info("MAIN: checkStorage");
@@ -489,9 +490,10 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         }
         setupFilters(prefs);
         if (ciVisualMode) {
-            getSupportFragmentManager().executePendingTransactions();
+            // Pick the requested visual screen now, but do not mutate adapters while
+            // the rest of MainActivity is still initializing. The fixture data is
+            // injected after the selected fragment has completed its first layout.
             state.currentTab = CiVisualFixtures.requestedNavId(getIntent());
-            CiVisualFixtures.seedUi(this, state);
         }
 
         Logging.info("MAIN: first install check");
@@ -526,7 +528,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
                 } catch (RuntimeException ex) {
                     Logging.warn("CI visual refresh failed: " + ex.getClass().getSimpleName());
                 }
-            }, 1200L);
+            }, 900L);
         }
         Logging.info("MAIN: onCreate setup complete");
     }
