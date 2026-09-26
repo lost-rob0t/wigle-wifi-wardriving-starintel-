@@ -68,10 +68,22 @@ public final class StarIntelDocuments {
             final String dataset,
             final long now
     ) throws JSONException {
+        return observation(network, result, location, dataset, now, null);
+    }
+
+    public static JSONObject observation(
+            final Network network,
+            final ScanResult result,
+            final Location location,
+            final String dataset,
+            final long now,
+            final String stableObservationKey
+    ) throws JSONException {
         final String timestamp = iso(now);
         final String networkId = wirelessNetworkId(network.getBssid());
-        final String observationId = "starintel:observation:wigle:" +
-                compactMac(network.getBssid()) + ":" + UUID.randomUUID();
+        final String observationId = stableObservationKey == null
+                ? "starintel:observation:wigle:" + compactMac(network.getBssid()) + ":" + UUID.randomUUID()
+                : "starintel:observation:wigle:db:" + shortHash(stableObservationKey);
 
         final JSONObject value = new JSONObject();
         value.put("bssid", network.getBssid());
