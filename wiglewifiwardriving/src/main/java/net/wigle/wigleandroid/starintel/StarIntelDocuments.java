@@ -7,6 +7,7 @@ import android.os.Build;
 import net.wigle.wigleandroid.model.Network;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
@@ -30,7 +31,7 @@ public final class StarIntelDocuments {
             final Location location,
             final String dataset,
             final long now
-    ) {
+    ) throws JSONException {
         final String timestamp = iso(now);
         final JSONObject data = new JSONObject();
         data.put("bssid", network.getBssid());
@@ -66,7 +67,7 @@ public final class StarIntelDocuments {
             final Location location,
             final String dataset,
             final long now
-    ) {
+    ) throws JSONException {
         final String timestamp = iso(now);
         final String networkId = wirelessNetworkId(network.getBssid());
         final String observationId = "starintel:observation:wigle:" +
@@ -131,7 +132,7 @@ public final class StarIntelDocuments {
             final int severity,
             final String dataset,
             final long now
-    ) {
+    ) throws JSONException {
         final String timestamp = iso(now);
         final String observationId = observation.optString("_id");
         final String ruleId = "wigle-mac-watch:" + shortHash(watchRule);
@@ -198,7 +199,7 @@ public final class StarIntelDocuments {
             final JSONObject data,
             final JSONArray sources,
             final JSONArray evidence
-    ) {
+    ) throws JSONException {
         return new JSONObject()
                 .put("_id", id)
                 .put("dataset", dataset == null || dataset.trim().isEmpty() ? "wigle-android" : dataset.trim())
@@ -212,7 +213,7 @@ public final class StarIntelDocuments {
                 .put("data", data);
     }
 
-    private static JSONArray sensorSources(final String timestamp) {
+    private static JSONArray sensorSources(final String timestamp) throws JSONException {
         return new JSONArray().put(new JSONObject()
                 .put("kind", "sensor")
                 .put("sensor", "android-wifi")
