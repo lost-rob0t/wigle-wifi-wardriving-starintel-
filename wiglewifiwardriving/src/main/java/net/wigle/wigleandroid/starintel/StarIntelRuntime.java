@@ -111,14 +111,23 @@ public final class StarIntelRuntime {
         );
         frozen.setRcois(network.getRcois());
 
-        final JSONObject observation =
-                StarIntelDocuments.observation(network, result, location, dataset, now);
-        final JSONObject networkDocument =
-                StarIntelDocuments.wirelessNetwork(network, location, dataset, now);
-        final JSONObject nearbyRecord = nearbyRecord(network, location, now);
-
-        mailbox.execute(() -> handleObservation(
-                frozen, observation, networkDocument, nearbyRecord, dataset, now));
+        final Location frozenLocation = location == null ? null : new Location(location);
+        mailbox.execute(() -> {
+            try {
+                final JSONObject observation =
+                        StarIntelDocuments.observation(
+                                frozen, result, frozenLocation, dataset, now);
+                final JSONObject networkDocument =
+                        StarIntelDocuments.wirelessNetwork(
+                                frozen, frozenLocation, dataset, now);
+                final JSONObject nearbyRecord =
+                        nearbyRecord(frozen, frozenLocation, now);
+                handleObservation(
+                        frozen, observation, networkDocument, nearbyRecord, dataset, now);
+            } catch (Exception ex) {
+                Logging.error("Unable to build StarIntel Wi-Fi documents", ex);
+            }
+        });
     }
 
     public void endWifiScan() {
@@ -152,7 +161,7 @@ public final class StarIntelRuntime {
             final JSONObject nearbyRecord,
             final String dataset,
             final long now
-    ) {
+    ) throws Exception {
         nearby.put(network.getBssid(), nearbyRecord);
 
         final boolean serverEnabled =
@@ -216,31 +225,35 @@ public final class StarIntelRuntime {
     private void publishSnapshotInternal() {
         if (!prefs.getBoolean(PreferenceKeys.PREF_STARINTEL_WEAR_SYNC, true)) return;
 
-        final JSONObject snapshot = new JSONObject();
-        snapshot.put("updated_at", System.currentTimeMillis());
-        snapshot.put("scanning", MainActivity.isScanning(context));
-        snapshot.put("run_networks", ListFragment.lameStatic.runNets);
-        snapshot.put("new_networks", ListFragment.lameStatic.newWifi);
-        snapshot.put("database_networks", ListFragment.lameStatic.dbNets);
-        snapshot.put("watch_hits", watchHits);
-        snapshot.put("watch_rules", watchlist.watchedRuleCount());
-        snapshot.put("queued_documents", outbox.count());
+        try {
+            final JSONObject snapshot = new JSONObject();
+            snapshot.put("updated_at", System.currentTimeMillis());
+            snapshot.put("scanning", MainActivity.isScanning(context));
+            snapshot.put("run_networks", ListFragment.lameStatic.runNets);
+            snapshot.put("new_networks", ListFragment.lameStatic.newWifi);
+            snapshot.put("database_networks", ListFragment.lameStatic.dbNets);
+            snapshot.put("watch_hits", watchHits);
+            snapshot.put("watch_rules", watchlist.watchedRuleCount());
+            snapshot.put("queued_documents", outbox.count());
 
-        final JSONArray networks = new JSONArray();
-        final ArrayList<JSONObject> ordered = new ArrayList<>(nearby.values());
-        for (int i = ordered.size() - 1; i >= 0; i--) {
-            networks.put(ordered.get(i));
+            final JSONArray networks = new JSONArray();
+            final ArrayList<JSONObject> ordered = new ArrayList<>(nearby.values());
+            for (int i = ordered.size() - 1; i >= 0; i--) {
+                networks.put(ordered.get(i));
+            }
+            snapshot.put("networks", networks);
+            if (lastAlert != null) snapshot.put("last_alert", lastAlert);
+            wearBridge.publishSnapshot(snapshot);
+        } catch (Exception ex) {
+            Logging.error("Unable to build Wear OS StarIntel snapshot", ex);
         }
-        snapshot.put("networks", networks);
-        if (lastAlert != null) snapshot.put("last_alert", lastAlert);
-        wearBridge.publishSnapshot(snapshot);
     }
 
     private static JSONObject nearbyRecord(
             final Network network,
             final Location location,
             final long now
-    ) {
+    ) throws Exception {
         final JSONObject json = new JSONObject()
                 .put("bssid", network.getBssid())
                 .put("ssid", network.getSsid())
