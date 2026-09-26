@@ -510,4 +510,6 @@
     <string name="export_alert_filter">Export alert filter</string>
     <string name="export_alert_filter_description_hint">Filter description</string>
     <string name="export_alert_filter_empty">No alert addresses or BLE manufacturer IDs to export</string>
+    <string name="starintel_watchlist">StarIntel Watchlist</string>
+    <string name="starintel_watchlist_description">Live ingest, MAC/OUI alerts, and Wear OS</string>
 </resources>
