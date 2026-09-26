@@ -1,0 +1,100 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: Configure Android build
+        env:
+          MAPS_KEY: ${{ secrets.CI_DUMMY_MAPS_API_KEY }}
+        run: |
+          printf 'MAPS_API_KEY=%s\n' "${MAPS_KEY:-CI_DUMMY_MAPS_KEY}" > local.properties
+          chmod +x gradlew
+
+      - name: Require and install release signing key
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for value in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [[ -z "${!value:-}" ]]; then
+              echo "::error::Missing required release secret: $value"
+              exit 1
+            fi
+          done
+          KEYSTORE="$RUNNER_TEMP/starintel-android-release.jks"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE"
+          {
+            echo "STARINTEL_ANDROID_KEYSTORE=$KEYSTORE"
+            echo "STARINTEL_ANDROID_KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD"
+            echo "STARINTEL_ANDROID_KEY_ALIAS=$ANDROID_KEY_ALIAS"
+            echo "STARINTEL_ANDROID_KEY_PASSWORD=$ANDROID_KEY_PASSWORD"
+          } >> "$GITHUB_ENV"
+
+      - name: Test and build signed APK + AAB packages
+        run: |
+          ./gradlew --stacktrace \
+            :wiglewifiwardriving:testReleaseUnitTest \
+            :wiglewifiwardriving:assembleRelease \
+            :wiglewifiwardriving:bundleRelease \
+            :starintelwear:assembleRelease \
+            :starintelwear:bundleRelease
+
+      - name: Verify release APK signatures
+        run: |
+          set -euo pipefail
+          PHONE_APK="$(find wiglewifiwardriving/build/outputs/apk/release -name '*.apk' -print -quit)"
+          WEAR_APK="$(find starintelwear/build/outputs/apk/release -name '*.apk' -print -quit)"
+          test -n "$PHONE_APK"
+          test -n "$WEAR_APK"
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner" verify --verbose "$PHONE_APK"
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner" verify --verbose "$WEAR_APK"
+
+      - name: Stage release assets
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          VERSION="${GITHUB_REF_NAME:-manual}"
+          cp "$(find wiglewifiwardriving/build/outputs/apk/release -name '*.apk' -print -quit)" "dist/wigle-starintel-phone-${VERSION}.apk"
+          cp "$(find wiglewifiwardriving/build/outputs/bundle/release -name '*.aab' -print -quit)" "dist/wigle-starintel-phone-${VERSION}.aab"
+          cp "$(find starintelwear/build/outputs/apk/release -name '*.apk' -print -quit)" "dist/wigle-starintel-wear-${VERSION}.apk"
+          cp "$(find starintelwear/build/outputs/bundle/release -name '*.aab' -print -quit)" "dist/wigle-starintel-wear-${VERSION}.aab"
+          sha256sum dist/* > dist/SHA256SUMS
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: starintel-wigle-android-release
+          if-no-files-found: error
+          path: dist/*
+
+      - name: Publish GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*
