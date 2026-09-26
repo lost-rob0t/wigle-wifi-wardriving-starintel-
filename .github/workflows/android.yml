@@ -75,7 +75,7 @@ jobs:
           mkdir -p screenshots
 
       - name: Capture phone screenshots
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 35
           target: google_apis
@@ -125,7 +125,7 @@ jobs:
             adb exec-out screencap -p > screenshots/phone-watchlist.png
 
       - name: Capture Wear OS screenshots
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 35
           target: android-wear
@@ -135,20 +135,7 @@ jobs:
           ram-size: 3072M
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          script: |
-            set -eu
-            WEAR_APK="$(find artifacts -type f -name 'starintelwear-debug.apk' -print -quit)"
-            test -n "$WEAR_APK"
-            adb install -r "$WEAR_APK"
-            adb shell pm grant net.wigle.wigleandroid android.permission.POST_NOTIFICATIONS || true
-            adb shell am start -W \
-              -n net.wigle.wigleandroid/net.wigle.wigleandroid.starintelwear.MainActivity \
-              --ez ci_visual true
-            sleep 5
-            adb exec-out screencap -p > screenshots/wear-dashboard.png
-            adb shell input swipe 220 330 220 120 350 || true
-            sleep 2
-            adb exec-out screencap -p > screenshots/wear-nearby.png
+          script: bash .github/scripts/capture-wear-screenshots.sh
 
       - name: Upload visual CI screenshots
         uses: actions/upload-artifact@v4
