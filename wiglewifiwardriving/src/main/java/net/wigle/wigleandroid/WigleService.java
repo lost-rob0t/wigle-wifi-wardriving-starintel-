@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import net.wigle.wigleandroid.ui.UINumberFormat;
+import net.wigle.wigleandroid.starintel.HeadlessWifiScanner;
 import net.wigle.wigleandroid.util.Logging;
 import net.wigle.wigleandroid.util.PreferenceKeys;
 
@@ -43,6 +44,7 @@ public final class WigleService extends Service {
     public static final String NOTIFICATION_CHANNEL_ID = "wigle_notification_9";
 
     private GuardThread guardThread;
+    private HeadlessWifiScanner headlessWifiScanner;
     private final AtomicBoolean done = new AtomicBoolean( false );
     private Bitmap largeIcon = null;
     private RemoteViews smallRemoteViews;
@@ -66,6 +68,7 @@ public final class WigleService extends Service {
             Thread.currentThread().setName( "GuardThread-" + Thread.currentThread().getName() );
             while ( ! done.get() ) {
                 MainActivity.sleep( 15000L );
+                syncHeadlessScanner();
                 setupNotification();
             }
             Logging.info("GuardThread done");
@@ -109,47 +112,42 @@ public final class WigleService extends Service {
 
     @Override
     public boolean onUnbind( final Intent intent ) {
-        Logging.info( "service: onUnbind. intent: " + intent );
-        shutdownNotification();
-        stopSelf();
-        return super.onUnbind( intent );
+        Logging.info( "service: onUnbind. keeping foreground scanner alive. intent: " + intent );
+        syncHeadlessScanner();
+        return true;
     }
 
     /**
      * This is called if the user force-kills the app
      */
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        Logging.info("service: onTaskRemoved.");
-        if (! done.get()) {
-            final MainActivity mainActivity = MainActivity.getMainActivity();
-            if (mainActivity != null) {
-                mainActivity.finishSoon();
-            }
-            setDone();
-        }
-        shutdownNotification();
-        stopSelf();
+    public void onTaskRemoved(final Intent rootIntent) {
+        Logging.info("service: onTaskRemoved; continuing as sticky foreground service.");
+        syncHeadlessScanner();
+        setupNotification();
         super.onTaskRemoved(rootIntent);
-        Logging.info("service: onTaskRemoved complete.");
     }
 
     @Override
     public void onCreate() {
         Logging.info( "service: onCreate" );
+        super.onCreate();
 
+        headlessWifiScanner = new HeadlessWifiScanner(getApplicationContext());
         setupNotification();
+        syncHeadlessScanner();
 
-        // don't use guard thread
         guardThread = new GuardThread();
         guardThread.start();
-        super.onCreate();
     }
 
     @Override
     public void onDestroy() {
         Logging.info( "service: onDestroy" );
-        // Make sure our notification is gone.
+        if (headlessWifiScanner != null) {
+            headlessWifiScanner.close();
+            headlessWifiScanner = null;
+        }
         shutdownNotification();
         setDone();
         super.onDestroy();
@@ -185,6 +183,14 @@ public final class WigleService extends Service {
     private void handleCommand( Intent intent ) {
         Logging.info( "service: handleCommand: intent: " + intent );
         setupNotification();
+    }
+
+    private void syncHeadlessScanner() {
+        final HeadlessWifiScanner scanner = headlessWifiScanner;
+        if (scanner == null) return;
+        final boolean activityAbsent = MainActivity.getMainActivity() == null;
+        final boolean shouldScan = activityAbsent && MainActivity.isScanning(getApplicationContext());
+        scanner.setActive(shouldScan);
     }
 
     private void shutdownNotification() {
@@ -246,38 +252,39 @@ public final class WigleService extends Service {
                 pauseSharedIntent.setAction(PAUSE_INTENT);
                 pauseSharedIntent.setClass(getApplicationContext(), net.wigle.wigleandroid.listener.ScanControlReceiver.class);
 
-                final MainActivity ma = MainActivity.getMainActivity();
-                Notification notification = null;
+                Notification notification;
 
-                if (null == ma) {
-                    Logging.info("MainActivity is null");
+                final PendingIntent pauseIntent = PendingIntent.getBroadcast(
+                        getApplicationContext(), 0, pauseSharedIntent,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                final Intent scanSharedIntent = new Intent();
+                scanSharedIntent.setAction(SCAN_INTENT);
+                scanSharedIntent.setClass(getApplicationContext(), net.wigle.wigleandroid.listener.ScanControlReceiver.class);
+                final PendingIntent scanIntent = PendingIntent.getBroadcast(
+                        getApplicationContext(), 0, scanSharedIntent,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+
+                final Intent uploadSharedIntent = new Intent();
+                uploadSharedIntent.setAction(UPLOAD_INTENT);
+                uploadSharedIntent.setClass(getApplicationContext(), net.wigle.wigleandroid.listener.UploadReceiver.class);
+                final PendingIntent uploadIntent = PendingIntent.getBroadcast(
+                        getApplicationContext(), 0, uploadSharedIntent,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                if (SDK_INT >= 31) {
+                    notification = getNotification31(title, context, text,
+                            ListFragment.lameStatic.newWifi, ListFragment.lameStatic.runNets,
+                            ListFragment.lameStatic.newCells, ListFragment.lameStatic.runCells,
+                            ListFragment.lameStatic.newBt, ListFragment.lameStatic.runBt,
+                            distString, distStringShort, dbNets,
+                            MainActivity.isScanning(context)?context.getString(R.string.list_scanning_on):context.getString(R.string.list_scanning_off),
+                            when, contentIntent, pauseIntent, scanIntent, uploadIntent);
+                } else if (SDK_INT >= Build.VERSION_CODES.O) {
+                    notification = getNotification26(title, context, text, ListFragment.lameStatic.newWifi,
+                            ListFragment.lameStatic.newCells, ListFragment.lameStatic.newBt,
+                            distStringShort, when, contentIntent, pauseIntent,
+                            scanIntent, uploadIntent);
                 } else {
-                    final PendingIntent pauseIntent = PendingIntent.getBroadcast(MainActivity.getMainActivity(), 0, pauseSharedIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
-                    final Intent scanSharedIntent = new Intent();
-                    scanSharedIntent.setAction(SCAN_INTENT);
-                    scanSharedIntent.setClass(getApplicationContext(), net.wigle.wigleandroid.listener.ScanControlReceiver.class);
-                    final PendingIntent scanIntent = PendingIntent.getBroadcast(MainActivity.getMainActivity(), 0, scanSharedIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
-
-                    final Intent uploadSharedIntent = new Intent();
-                    uploadSharedIntent.setAction(UPLOAD_INTENT);
-                    uploadSharedIntent.setClass(getApplicationContext(), net.wigle.wigleandroid.listener.UploadReceiver.class);
-                    final PendingIntent uploadIntent = PendingIntent.getBroadcast(MainActivity.getMainActivity(), 0, uploadSharedIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
-                    if (SDK_INT >= 31) {
-                        notification = getNotification31(title, context, text,
-                                ListFragment.lameStatic.newWifi, ListFragment.lameStatic.runNets,
-                                ListFragment.lameStatic.newCells, ListFragment.lameStatic.runCells,
-                                ListFragment.lameStatic.newBt, ListFragment.lameStatic.runBt,
-                                distString, distStringShort, dbNets,
-                                MainActivity.isScanning(context)?context.getString(R.string.list_scanning_on):context.getString(R.string.list_scanning_off),
-                                when, contentIntent, pauseIntent, scanIntent, uploadIntent);
-                    } else if (SDK_INT >= Build.VERSION_CODES.O) {
-                        notification = getNotification26(title, context, text, ListFragment.lameStatic.newWifi,
-                                ListFragment.lameStatic.newCells, ListFragment.lameStatic.newBt,
-                                distStringShort, when, contentIntent, pauseIntent,
-                                scanIntent, uploadIntent);
-                    } else {
-                        notification = getNotification16(title, context, text, when, contentIntent, pauseIntent, scanIntent, uploadIntent);
-                    }
+                    notification = getNotification16(title, context, text, when, contentIntent, pauseIntent, scanIntent, uploadIntent);
                 }
 
                 if (null != notification) {
