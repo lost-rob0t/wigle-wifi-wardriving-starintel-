@@ -24,5 +24,11 @@ sleep 2
 adb exec-out screencap -p > screenshots/wear-nearby.png
 test -s screenshots/wear-nearby.png
 
+adb shell am start -W \
+  -n net.wigle.wigleandroid/net.wigle.wigleandroid.starintelwear.ComplicationPreviewActivity
+sleep 3
+adb exec-out screencap -p > screenshots/wear-complication.png
+test -s screenshots/wear-complication.png
+
 echo "Wear screenshots:"
 ls -lh screenshots/wear-*.png
