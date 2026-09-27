@@ -101,6 +101,16 @@ jobs:
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: bash .github/scripts/capture-wear-screenshots.sh
 
+      - name: Upload visual diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-visual-diagnostics-pr-${{ github.event.pull_request.number }}
+          if-no-files-found: warn
+          path: |
+            screenshots/*.png
+            diagnostics/**
+
       - name: Upload visual CI screenshots
         uses: actions/upload-artifact@v4
         with:
