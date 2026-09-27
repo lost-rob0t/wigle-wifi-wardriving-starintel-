@@ -29,8 +29,12 @@ dump_ui() {
 }
 
 resumed_activity() {
-  adb shell dumpsys activity activities 2>/dev/null \
-    | grep -m1 'mResumedActivity' || true
+  {
+    adb shell dumpsys activity activities 2>/dev/null \
+      | grep -m1 -E 'mResumedActivity|topResumedActivity|ResumedActivity' || true
+    adb shell dumpsys window windows 2>/dev/null \
+      | grep -m1 -E 'mCurrentFocus|mFocusedApp' || true
+  } | tr '\n' ' '
 }
 
 fail_capture() {
@@ -39,7 +43,15 @@ fail_capture() {
   echo "Resumed activity: $(resumed_activity)"
   dump_ui > "diagnostics/phone-${name}-ui.xml" || true
   adb logcat -d -v threadtime > "diagnostics/phone-${name}-logcat.txt" || true
+  adb shell dumpsys activity activities > "diagnostics/phone-${name}-activity.txt" || true
+  adb shell dumpsys window windows > "diagnostics/phone-${name}-window.txt" || true
   adb exec-out screencap -p > "screenshots/FAILED-phone-${name}.png" || true
+  echo "----- app/runtime crash excerpt -----"
+  grep -E -A35 -B8 'FATAL EXCEPTION|AndroidRuntime|Process: net\.wigle|Caused by:|am_crash|Force finishing|WigleUncaughtExceptionHandler|Most Recent Error Report' \
+    "diagnostics/phone-${name}-logcat.txt" | tail -n 260 || true
+  echo "----- process / task state -----"
+  grep -E 'net\.wigle\.wigleandroid|mResumedActivity|topResumedActivity|mCurrentFocus|mFocusedApp' \
+    "diagnostics/phone-${name}-activity.txt" "diagnostics/phone-${name}-window.txt" | tail -n 120 || true
   exit 1
 }
 
