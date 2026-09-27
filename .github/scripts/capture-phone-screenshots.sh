@@ -14,8 +14,6 @@ adb install -r "$PHONE_APK"
 adb shell svc wifi enable || true
 
 for permission in \
-  android.permission.ACCESS_FINE_LOCATION \
-  android.permission.ACCESS_COARSE_LOCATION \
   android.permission.POST_NOTIFICATIONS \
   android.permission.BLUETOOTH_SCAN \
   android.permission.BLUETOOTH_CONNECT \
@@ -77,7 +75,11 @@ capture_main() {
     --es ci_visual_screen "$screen"
 
   wait_for_component "$screen" "net.wigle.wigleandroid/.MainActivity"
-  sleep 1
+  if [[ "$screen" == "map" ]]; then
+    sleep 6
+  else
+    sleep 1
+  fi
   adb exec-out screencap -p > "screenshots/phone-${screen}.png"
   test -s "screenshots/phone-${screen}.png"
 }
