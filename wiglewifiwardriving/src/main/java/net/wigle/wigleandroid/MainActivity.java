@@ -520,14 +520,19 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         // show the selected screen
         selectFragment(state.currentTab);
         if (ciVisualMode) {
-            new Handler().postDelayed(() -> {
+            final Runnable refreshVisualFixtures = () -> {
                 try {
                     getSupportFragmentManager().executePendingTransactions();
                     CiVisualFixtures.seedUi(MainActivity.this, state);
                 } catch (RuntimeException ex) {
                     Logging.warn("CI visual refresh failed: " + ex.getClass().getSimpleName());
                 }
-            }, 900L);
+            };
+            final Handler visualHandler = new Handler();
+            visualHandler.postDelayed(refreshVisualFixtures, 900L);
+            // MapLibre style creation is asynchronous. A second idempotent pass makes
+            // sure map markers are present once the renderer exists.
+            visualHandler.postDelayed(refreshVisualFixtures, 3200L);
         }
         Logging.info("MAIN: onCreate setup complete");
     }
