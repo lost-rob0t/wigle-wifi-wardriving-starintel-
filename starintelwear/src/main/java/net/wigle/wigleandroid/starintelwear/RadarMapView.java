@@ -47,14 +47,17 @@ public final class RadarMapView extends View {
     public RadarMapView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final float density = getResources().getDisplayMetrics().density;
+        setWillNotDraw(false);
+        setBackgroundColor(0x00000000);
+
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(Math.max(1f, density));
-        linePaint.setAlpha(90);
+        linePaint.setAlpha(120);
 
         pointPaint.setStyle(Paint.Style.FILL);
-        pointPaint.setAlpha(220);
+        pointPaint.setAlpha(255);
 
-        textPaint.setTextSize(11f * getResources().getDisplayMetrics().scaledDensity);
+        textPaint.setTextSize(10f * getResources().getDisplayMetrics().scaledDensity);
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -88,9 +91,8 @@ public final class RadarMapView extends View {
         final float pad = Math.min(width, height) * 0.09f;
         final RectF bounds = new RectF(pad, pad, width - pad, height - pad);
 
-        linePaint.setColor(0x55FFFFFF);
-        pointPaint.setColor(0xFFFFFFFF);
-        textPaint.setColor(0xCCFFFFFF);
+        linePaint.setColor(0x66708BA0);
+        textPaint.setColor(0xCC8FA2B5);
 
         canvas.drawOval(bounds, linePaint);
         canvas.drawLine(width / 2f, bounds.top, width / 2f, bounds.bottom, linePaint);
@@ -120,11 +122,23 @@ public final class RadarMapView extends View {
             final float y = bounds.bottom -
                     (float) ((point.lat - minLat) / latSpan) * bounds.height();
             final float strength = clamp((point.rssi - MIN_RSSI) / (MAX_RSSI - MIN_RSSI));
-            final float radius = dp(2.5f) + dp(5f) * strength;
+            final float radius = dp(3f) + dp(5.5f) * strength;
+            if (point.rssi >= -50) {
+                pointPaint.setColor(0xFFFF5C70);
+            } else if (point.rssi >= -67) {
+                pointPaint.setColor(0xFF66DAFF);
+            } else {
+                pointPaint.setColor(0xFF8FA2B5);
+            }
             canvas.drawCircle(x, y, radius, pointPaint);
+            pointPaint.setStyle(Paint.Style.STROKE);
+            pointPaint.setStrokeWidth(dp(1.5f));
+            pointPaint.setColor(0xAAFFFFFF);
+            canvas.drawCircle(x, y, radius + dp(2f), pointPaint);
+            pointPaint.setStyle(Paint.Style.FILL);
         }
 
-        canvas.drawText(points.size() + " mapped", width / 2f, bounds.bottom - dp(5), textPaint);
+        canvas.drawText(points.size() + " APs", width / 2f, bounds.bottom - dp(6), textPaint);
     }
 
     private float dp(final float value) {
