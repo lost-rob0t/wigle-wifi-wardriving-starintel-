@@ -27,7 +27,7 @@ public class TerminationReceiver extends BroadcastReceiver {
                 MainActivity ma = MainActivity.getMainActivity();
                 if (null != ma) {
                     //ALIBI: multiple terminations in rapid succession can cause NPE
-                    ma.finishSoon();
+                    ma.finishExplicitly();
                 }
                 return;
             default:

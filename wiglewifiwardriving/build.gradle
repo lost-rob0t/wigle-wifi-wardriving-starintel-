@@ -22,6 +22,11 @@ def isFossMainBuild() {
 }
 
 def isAab = gradle.startParameter.taskNames.any { it.toLowerCase().contains("bundle") }
+def releaseKeystore = System.getenv("STARINTEL_ANDROID_KEYSTORE")
+def releaseKeystorePassword = System.getenv("STARINTEL_ANDROID_KEYSTORE_PASSWORD")
+def releaseKeyAlias = System.getenv("STARINTEL_ANDROID_KEY_ALIAS")
+def releaseKeyPassword = System.getenv("STARINTEL_ANDROID_KEY_PASSWORD")
+def hasReleaseSigning = releaseKeystore && releaseKeystorePassword && releaseKeyAlias && releaseKeyPassword
 
 apply plugin: 'com.android.application'
 apply plugin: 'de.undercouch.download'
@@ -43,8 +48,22 @@ android {
         buildConfig = true
     }
 
+    signingConfigs {
+        starintelRelease {
+            if (hasReleaseSigning) {
+                storeFile file(releaseKeystore)
+                storePassword releaseKeystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.starintelRelease
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
             // suppress x86 on release apks to reduce size due to .so files
@@ -118,6 +137,7 @@ dependencies {
     //NB: 1.12 -  1.14.0-alpha08 are unstable - see byzantine failures in https://stackoverflow.com/questions/79128940/mysterious-accessibility-related-crash
     implementation "com.google.android.material:material:1.11.0"
     implementation "com.google.android.gms:play-services-maps:19.2.0"
+    implementation 'com.google.android.gms:play-services-wearable:20.0.1'
     implementation "androidx.camera:camera-camera2:$camerax_version"
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:$camerax_version"

@@ -54,6 +54,33 @@ import java.util.List;
 
 public class FossMappingFragment extends AbstractMappingFragment {
 
+    /**
+     * Deterministic offline style used only by debug visual CI. It keeps screenshot
+     * validation independent of map-tile network access while still exercising
+     * MapLibre, the camera, and WiGLE's real network-marker renderer.
+     */
+    private static final String CI_VISUAL_STYLE_JSON =
+            "{\"version\":8," +
+            "\"sources\":{" +
+              "\"minor\":{\"type\":\"geojson\",\"data\":{\"type\":\"FeatureCollection\",\"features\":[" +
+                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"MultiLineString\",\"coordinates\":[" +
+                  "[[-83.003,39.956],[-83.003,39.967]],[[-83.001,39.956],[-83.001,39.967]]," +
+                  "[[-82.999,39.956],[-82.999,39.967]],[[-82.997,39.956],[-82.997,39.967]]," +
+                  "[[-82.995,39.956],[-82.995,39.967]],[[-83.004,39.958],[-82.994,39.958]]," +
+                  "[[-83.004,39.960],[-82.994,39.960]],[[-83.004,39.962],[-82.994,39.962]]," +
+                  "[[-83.004,39.964],[-82.994,39.964]],[[-83.004,39.966],[-82.994,39.966]]" +
+                "]}}]}}," +
+              "\"major\":{\"type\":\"geojson\",\"data\":{\"type\":\"FeatureCollection\",\"features\":[" +
+                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[-83.005,39.9612],[-82.993,39.9612]]}}," +
+                "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[-82.9988,39.955],[-82.9988,39.968]]}}" +
+              "]}}" +
+            "}," +
+            "\"layers\":[" +
+              "{\"id\":\"background\",\"type\":\"background\",\"paint\":{\"background-color\":\"#09111b\"}}," +
+              "{\"id\":\"minor-roads\",\"type\":\"line\",\"source\":\"minor\",\"paint\":{\"line-color\":\"#26394b\",\"line-width\":2}}," +
+              "{\"id\":\"major-roads\",\"type\":\"line\",\"source\":\"major\",\"paint\":{\"line-color\":\"#4b6b82\",\"line-width\":5}}" +
+            "]}";
+
     private static final float ZOOM_MODIFIER = 1; //ALIBI: Google maps and MapLibe have an off-by-one zoom difference
     private MapView mapView;
 
@@ -146,7 +173,7 @@ public class FossMappingFragment extends AbstractMappingFragment {
                 styleUrl = "https://demotiles.maplibre.org/style.json";
             }
             try {
-                mapLibreMap.setStyle(styleUrl, style -> {
+                final Style.OnStyleLoaded onStyleLoaded = style -> {
                     final Activity activity = getActivity();
                     if (activity != null) {
                         mapRender = new FossMapRender(activity, mapLibreMap, false);
@@ -157,7 +184,19 @@ public class FossMappingFragment extends AbstractMappingFragment {
                     setupTileOverlay(mapLibreMap, prefs, style);
                     setupRouteVisualization(mapLibreMap, prefs, visualizeRoute);
                     initializeCameraPosition(mapLibreMap, oldCenter, oldZoom, prefs);
-                });
+                };
+
+                final Activity activity = getActivity();
+                final boolean ciVisual = activity instanceof MainActivity
+                        && CiVisualFixtures.enabled(activity.getIntent());
+                if (ciVisual) {
+                    mapLibreMap.setStyle(
+                            new Style.Builder().fromJson(CI_VISUAL_STYLE_JSON),
+                            onStyleLoaded
+                    );
+                } else {
+                    mapLibreMap.setStyle(styleUrl, onStyleLoaded);
+                }
             } catch (RuntimeException styleEx) {
                 Logging.error("Failed to apply FOSS map style '" + styleUrl + "': ", styleEx);
                 FossConfigDialogUtil.show(getActivity(), null);

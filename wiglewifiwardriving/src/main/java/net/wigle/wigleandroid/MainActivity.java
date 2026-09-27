@@ -250,6 +250,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
     public static final boolean ENABLE_DEBUG_LOGGING = false;
 
     private static MainActivity mainActivity;
+    private boolean explicitExitRequested = false;
     private BatteryLevelReceiver batteryLevelReceiver;
     private BroadcastReceiver screenStateReceiver;
     private boolean playServiceShown = false;
@@ -299,6 +300,8 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         TrafficStats.setThreadStatsTag(THREAD_ID);
         workAroundGoogleMapsBug();
         final SharedPreferences prefs = getSharedPreferences(PreferenceKeys.SHARED_PREFS, Context.MODE_PRIVATE);
+        final boolean ciVisualMode = CiVisualFixtures.enabled(getIntent());
+        CiVisualFixtures.configurePreferences(this, prefs);
 
         ThemeUtil.setTheme(prefs);
         mainActivity = this;
@@ -346,7 +349,9 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
                 dl.setScrimColor(scrimColor);
             }
         }
-        setupPermissions();
+        if (!ciVisualMode) {
+            setupPermissions();
+        }
         setupMenuDrawer();
 
         // do some of our own error handling, write a file with the stack
@@ -455,56 +460,80 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             }
         }
 
-        Logging.info("MAIN: setupService");
-        setupService();
-        Logging.info("MAIN: checkStorage");
-        checkStorage();
-        Logging.info("MAIN: setupDatabase");
-        setupDatabase(prefs);
-        Logging.info("MAIN: setupBattery");
-        setupBattery();
-        Logging.info("MAIN: setupScreenStateReceiver");
-        setupScreenStateReceiver();
-        Logging.info("MAIN: setupSound");
-        setupSound();
-        Logging.info("MAIN: setupActivationDialog");
-        setupActivationDialog(prefs);
-        Logging.info("MAIN: setupBluetooth");
-        setupBluetooth(prefs);
-        Logging.info("MAIN: setupWifi");
-        setupWifi(prefs);
-        Logging.info("MAIN: setupLocation"); // must be after setupWifi
-        setupLocation(prefs);
+        if (!ciVisualMode) {
+            Logging.info("MAIN: setupService");
+            setupService();
+            Logging.info("MAIN: checkStorage");
+            checkStorage();
+            Logging.info("MAIN: setupDatabase");
+            setupDatabase(prefs);
+            Logging.info("MAIN: setupBattery");
+            setupBattery();
+            Logging.info("MAIN: setupScreenStateReceiver");
+            setupScreenStateReceiver();
+            Logging.info("MAIN: setupSound");
+            setupSound();
+            Logging.info("MAIN: setupActivationDialog");
+            setupActivationDialog(prefs);
+            Logging.info("MAIN: setupBluetooth");
+            setupBluetooth(prefs);
+            Logging.info("MAIN: setupWifi");
+            setupWifi(prefs);
+            Logging.info("MAIN: setupLocation"); // must be after setupWifi
+            setupLocation(prefs);
+        } else {
+            Logging.info("MAIN: CI visual mode - skipping hardware, DB, and service startup");
+        }
         Logging.info("MAIN: setup tabs");
         if (savedInstanceState == null) {
             setupFragments();
         }
         setupFilters(prefs);
-
-        Logging.info("MAIN: first install check");
-        // ALIBI: don't inherit MxC implant failures from backups.
-        if (InstallUtility.isFirstInstall(this)) {
-            SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.remove(ListFragment.PREF_MXC_REINSTALL_ATTEMPTED);
-            if (!isImperialUnitsLocale()) {
-                editor.putBoolean(PreferenceKeys.PREF_METRIC, true);
-            }
-            editor.apply();
+        if (ciVisualMode) {
+            // Pick the requested visual screen now, but do not mutate adapters while
+            // the rest of MainActivity is still initializing. The fixture data is
+            // injected after the selected fragment has completed its first layout.
+            state.currentTab = CiVisualFixtures.requestedNavId(getIntent());
         }
 
-        Logging.info("MAIN: cell data check");
-        //TODO: if we can determine whether DB needs updating, we can avoid copying every time
-        //if (!state.mxcDbHelper.isPresent()) {
-        state.mxcDbHelper.implantMxcDatabase(this, isFinishing());
-        //}
+        if (!ciVisualMode) {
+            Logging.info("MAIN: first install check");
+            // ALIBI: don't inherit MxC implant failures from backups.
+            if (InstallUtility.isFirstInstall(this)) {
+                SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = mySPrefs.edit();
+                editor.remove(ListFragment.PREF_MXC_REINSTALL_ATTEMPTED);
+                if (!isImperialUnitsLocale()) {
+                    editor.putBoolean(PreferenceKeys.PREF_METRIC, true);
+                }
+                editor.apply();
+            }
 
-        Logging.info("MAIN: keystore check");
-        // rksh 20160202 - api/authuser secure preferences storage
-        checkInitKeystore(prefs);
+            Logging.info("MAIN: cell data check");
+            state.mxcDbHelper.implantMxcDatabase(this, isFinishing());
 
-        // show the list by default
+            Logging.info("MAIN: keystore check");
+            // rksh 20160202 - api/authuser secure preferences storage
+            checkInitKeystore(prefs);
+        }
+
+        // show the selected screen
         selectFragment(state.currentTab);
+        if (ciVisualMode) {
+            final Runnable refreshVisualFixtures = () -> {
+                try {
+                    getSupportFragmentManager().executePendingTransactions();
+                    CiVisualFixtures.seedUi(MainActivity.this, state);
+                } catch (RuntimeException ex) {
+                    Logging.warn("CI visual refresh failed: " + ex.getClass().getSimpleName());
+                }
+            };
+            final Handler visualHandler = new Handler();
+            visualHandler.postDelayed(refreshVisualFixtures, 900L);
+            // MapLibre style creation is asynchronous. A second idempotent pass makes
+            // sure map markers are present once the renderer exists.
+            visualHandler.postDelayed(refreshVisualFixtures, 3200L);
+        }
         Logging.info("MAIN: onCreate setup complete");
     }
 
@@ -883,7 +912,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
      */
     public void selectFragment(final int itemId) {
         if (itemId == R.id.nav_exit) {
-            finishSoon();
+            finishExplicitly();
             return;
         }
 
@@ -941,6 +970,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         if (itemId == R.id.nav_site_stats) return getString(R.string.site_stats_app_name);
         if (itemId == R.id.nav_stats) return getString(R.string.tab_stats);
         if (itemId == R.id.nav_uploads) return getString(R.string.uploads_app_name);
+        if (itemId == R.id.nav_starintel) return getString(R.string.starintel_watchlist);
         if (itemId == R.id.nav_settings) return getString(R.string.settings_app_name);
         if (itemId == R.id.nav_exit) return getString(R.string.menu_exit);
         return null;
@@ -1013,6 +1043,8 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             return NewsFragment.class;
         } else if (navId == R.id.nav_uploads) {
             return UploadsFragment.class;
+        } else if (navId == R.id.nav_starintel) {
+            return StarIntelFragment.class;
         } else if (navId == R.id.nav_settings) {
             return SettingsFragment.class;
         } else {
@@ -2295,6 +2327,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             // have to use the app context to bind to the service, cuz we're in tabs
             // http://code.google.com/p/android/issues/detail?id=2483#c2
             final Intent serviceIntent = new Intent(getApplicationContext(), WigleService.class);
+            ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
             final boolean bound = getApplicationContext().bindService(serviceIntent, state.serviceConnection,
                     Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
             Logging.info("\tservice bound: " + bound);
@@ -2759,6 +2792,11 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         return mDrawerToggle.onOptionsItemSelected(item);
     }
 
+    public void finishExplicitly() {
+        explicitExitRequested = true;
+        finishSoon();
+    }
+
     public void finishSoon() {
         this.state.wigleService = null;
         finishSoon(FINISH_TIME_MILLIS, false, false);
@@ -2859,11 +2897,17 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
                 }
             }
 
-            // stop the service, so when we die it's both stopped and unbound and will die
+            final boolean keepForegroundScanner =
+                    !explicitExitRequested && isScanning(getApplicationContext());
             final Intent serviceIntent = new Intent(this, WigleService.class);
-            stopService(serviceIntent);
+            if (keepForegroundScanner) {
+                Logging.info("MAIN: leaving foreground scanner service running");
+            } else {
+                Logging.info("MAIN: stopping foreground scanner service");
+                stopService(serviceIntent);
+            }
             try {
-                // have to use the app context to bind to the service, cuz we're in tabs
+                // Unbind the activity either way. A started service remains alive independently.
                 final Context c = getApplicationContext();
                 if (null != c) {
                     c.unbindService(state.serviceConnection);

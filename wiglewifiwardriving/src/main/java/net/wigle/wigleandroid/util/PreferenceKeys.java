@@ -64,6 +64,14 @@ public class PreferenceKeys {
     public static final String PREF_ALERT_BLE_MFGR_IDS = "alertOnBleMfgrId";
     public static final String PREF_CUSTOM_MENU_ICON = "customMenuIcon";
 
+    // StarIntel integration. Secrets are kept in Android Keystore, never in these prefs.
+    public static final String PREF_STARINTEL_ENABLED = "starintelEnabled";
+    public static final String PREF_STARINTEL_LIVE_INGEST = "starintelLiveIngest";
+    public static final String PREF_STARINTEL_WEAR_SYNC = "starintelWearSync";
+    public static final String PREF_STARINTEL_BASE_URL = "starintelBaseUrl";
+    public static final String PREF_STARINTEL_DATASET = "starintelDataset";
+    public static final String PREF_STARINTEL_ALERT_SEVERITY = "starintelAlertSeverity";
+
     // map prefs
     public static final String PREF_MAP_NO_TILE = "NONE";
     public static final String PREF_MAP_ONLYMINE_TILE = "MINE";

@@ -1999,6 +1999,48 @@ public final class DatabaseHelper extends Thread {
             return trackedQuery("SELECT lat,lon FROM route WHERE run_id = ?", args);
     }
 
+    /**
+     * Stable, bounded Wi-Fi network page for StarIntel export.
+     * Caller owns and must close the returned cursor.
+     */
+    public Cursor getStarIntelWifiNetworksForExport(
+            final String afterBssid,
+            final int limit
+    ) throws DBException {
+        checkDB();
+        return trackedQuery(
+                "SELECT bssid,ssid,frequency,capabilities,lasttime,bestlat,bestlon,bestlevel,rcois " +
+                        "FROM network WHERE type = ? AND bssid > ? ORDER BY bssid ASC LIMIT ?",
+                new String[]{
+                        NetworkType.WIFI.getCode(),
+                        afterBssid == null ? "" : afterBssid,
+                        Integer.toString(Math.max(1, limit))
+                }
+        );
+    }
+
+    /**
+     * Stable, bounded Wi-Fi observation page for StarIntel export.
+     * Joins location rows to current network metadata. Caller owns the cursor.
+     */
+    public Cursor getStarIntelWifiObservationsForExport(
+            final long afterId,
+            final int limit
+    ) throws DBException {
+        checkDB();
+        return trackedQuery(
+                "SELECT l._id,l.bssid,l.level,l.lat,l.lon,l.altitude,l.accuracy,l.time," +
+                        "n.ssid,n.frequency,n.capabilities,n.rcois " +
+                        "FROM location l JOIN network n ON n.bssid = l.bssid " +
+                        "WHERE l._id > ? AND n.type = ? ORDER BY l._id ASC LIMIT ?",
+                new String[]{
+                        Long.toString(Math.max(0L, afterId)),
+                        NetworkType.WIFI.getCode(),
+                        Integer.toString(Math.max(1, limit))
+                }
+        );
+    }
+
     public Cursor getSingleNetwork( final String bssid, final NetworkFilter filter ) throws DBException {
         checkDB();
         final String[] args = new String[]{bssid};

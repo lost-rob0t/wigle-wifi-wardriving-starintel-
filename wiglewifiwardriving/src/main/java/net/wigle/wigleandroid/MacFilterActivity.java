@@ -50,12 +50,18 @@ public class MacFilterActivity extends ScreenChildActivity {
         String filterType = intent.getStringExtra(FilterActivity.ADDR_FILTER_MESSAGE);
         if (FilterActivity.INTENT_BLE_MFGR_ID_ALERT.equals(filterType)) {
             setContentView(R.layout.ble_mfgr_filter_settings);
+        } else if (FilterActivity.INTENT_ALERT_FILTER.equals(filterType)) {
+            setContentView(R.layout.starintel_watchlist);
         } else {
             setContentView(R.layout.addressfiltersettings);
         }
         EdgeToEdge.enable(this);
         View addressFilterWrapper = findViewById(R.id.address_filter_wrapper);
         if (null != addressFilterWrapper) {
+            final int baseLeft = addressFilterWrapper.getPaddingLeft();
+            final int baseTop = addressFilterWrapper.getPaddingTop();
+            final int baseRight = addressFilterWrapper.getPaddingRight();
+            final int baseBottom = addressFilterWrapper.getPaddingBottom();
             ViewCompat.setOnApplyWindowInsetsListener(addressFilterWrapper, new OnApplyWindowInsetsListener() {
                         @Override
                         public @org.jspecify.annotations.NonNull WindowInsetsCompat onApplyWindowInsets(@org.jspecify.annotations.NonNull View v, @org.jspecify.annotations.NonNull WindowInsetsCompat insets) {
@@ -63,7 +69,10 @@ public class MacFilterActivity extends ScreenChildActivity {
                                     WindowInsetsCompat.Type.statusBars() |
                                             WindowInsetsCompat.Type.displayCutout());
                             v.setPadding(
-                                    innerPadding.left, innerPadding.top, innerPadding.right, innerPadding.bottom
+                                    baseLeft + innerPadding.left,
+                                    baseTop + innerPadding.top,
+                                    baseRight + innerPadding.right,
+                                    baseBottom + innerPadding.bottom
                             );
                             return insets;
                         }

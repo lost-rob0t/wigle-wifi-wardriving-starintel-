@@ -34,6 +34,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- permission for start-on-boot -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -381,8 +382,19 @@
         <service
             android:name=".WigleService"
             android:enabled="true"
-            android:foregroundServiceType="location"
+            android:foregroundServiceType="location|connectedDevice"
             android:icon="@mipmap/ic_launcher" />
+        <service
+            android:name=".starintel.PhoneWearListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/starintel/" />
+            </intent-filter>
+        </service>
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
