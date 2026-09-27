@@ -14,8 +14,17 @@ for i in $(seq 1 60); do
   [[ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]] && break
   sleep 1
 done
-adb shell input keyevent 82 || true
-sleep 6
+adb shell input keyevent KEYCODE_WAKEUP || true
+adb shell wm dismiss-keyguard || true
+adb shell settings put global stay_on_while_plugged_in 0 || true
+adb shell settings put secure doze_enabled 0 || true
+# The Wear emulator can foreground its charging experience on CI and hide the app
+# behind a black "Starting..." screen. Disable that emulator-only system surface.
+adb shell pm disable-user --user 0 \
+  com.google.android.wearable.sysui/com.google.android.clockwork.sysui.experiences.charging.ChargingActivity || true
+adb shell am force-stop com.google.android.wearable.sysui || true
+adb shell input keyevent KEYCODE_WAKEUP || true
+sleep 3
 
 adb install -r "$WEAR_APK"
 adb shell pm grant net.wigle.wigleandroid android.permission.POST_NOTIFICATIONS || true
@@ -57,15 +66,17 @@ fail_capture() {
 wait_for_wear_component() {
   local name="$1"
   local component="$2"
-  local i resumed focused starting
+  local i resumed starting
   for i in $(seq 1 50); do
     resumed="$(resumed_activity)"
-    focused="$(focused_window)"
     starting="$(starting_window)"
-    if [[ "$resumed" == *"$component"* ]] \
-      && [[ "$focused" == *"net.wigle.wigleandroid"* ]] \
-      && [[ -z "$starting" ]]; then
+    if [[ "$resumed" == *"$component"* ]] && [[ -z "$starting" ]]; then
       return 0
+    fi
+    # If SystemUI resurrects the charging experience, dismiss it and bring the app back.
+    if [[ "$resumed" == *"ChargingActivity"* ]]; then
+      adb shell input keyevent KEYCODE_BACK || true
+      adb shell input keyevent KEYCODE_WAKEUP || true
     fi
     sleep 0.5
   done
