@@ -83,6 +83,30 @@ wait_for_wear_component() {
   fail_capture "$name"
 }
 
+wait_for_wear_ui() {
+  local name="$1"
+  local component="$2"
+  local needle="$3"
+  local i resumed xml
+
+  for i in $(seq 1 5); do
+    sleep 2
+    resumed="$(resumed_activity)"
+    xml=""
+    if timeout 8s adb shell uiautomator dump /sdcard/starintel-window.xml >/dev/null 2>&1; then
+      xml="$(adb shell cat /sdcard/starintel-window.xml 2>/dev/null || true)"
+    fi
+    if [[ "$resumed" == *"$component"* ]] \
+      && [[ "$xml" == *"$needle"* ]] \
+      && [[ "$xml" != *"Starting..."* ]]; then
+      return 0
+    fi
+  done
+
+  echo "$xml" > "diagnostics/wear-${name}-ui.xml" || true
+  fail_capture "$name"
+}
+
 adb logcat -c || true
 adb shell am force-stop net.wigle.wigleandroid
 adb shell am start -W \
@@ -90,13 +114,13 @@ adb shell am start -W \
   --ez ci_visual true
 
 wait_for_wear_component "dashboard" "net.wigle.wigleandroid/.starintelwear.MainActivity"
-sleep 1
+wait_for_wear_ui "dashboard" "net.wigle.wigleandroid/.starintelwear.MainActivity" "STARINTEL"
 adb exec-out screencap -p > screenshots/wear-dashboard.png
 test -s screenshots/wear-dashboard.png
 
 adb shell input swipe 220 330 220 120 350 || true
-sleep 1
 wait_for_wear_component "nearby" "net.wigle.wigleandroid/.starintelwear.MainActivity"
+wait_for_wear_ui "nearby" "net.wigle.wigleandroid/.starintelwear.MainActivity" "NEARBY"
 adb exec-out screencap -p > screenshots/wear-nearby.png
 test -s screenshots/wear-nearby.png
 
@@ -104,7 +128,7 @@ adb logcat -c || true
 adb shell am start -W \
   -n net.wigle.wigleandroid/net.wigle.wigleandroid.starintelwear.ComplicationPreviewActivity
 wait_for_wear_component "complication" "net.wigle.wigleandroid/.starintelwear.ComplicationPreviewActivity"
-sleep 1
+wait_for_wear_ui "complication" "net.wigle.wigleandroid/.starintelwear.ComplicationPreviewActivity" "StarIntel complication preview"
 adb exec-out screencap -p > screenshots/wear-complication.png
 test -s screenshots/wear-complication.png
 
