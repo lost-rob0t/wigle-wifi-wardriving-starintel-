@@ -26,8 +26,12 @@ dump_ui() {
 }
 
 resumed_activity() {
-  adb shell dumpsys activity activities 2>/dev/null \
-    | grep -m1 'mResumedActivity' || true
+  {
+    adb shell dumpsys activity activities 2>/dev/null \
+      | grep -m1 -E 'mResumedActivity|topResumedActivity|ResumedActivity' || true
+    adb shell dumpsys window windows 2>/dev/null \
+      | grep -m1 -E 'mCurrentFocus|mFocusedApp' || true
+  } | tr '\n' ' '
 }
 
 fail_capture() {
@@ -36,7 +40,15 @@ fail_capture() {
   echo "Resumed activity: $(resumed_activity)"
   dump_ui > "diagnostics/wear-${name}-ui.xml" || true
   adb logcat -d -v threadtime > "diagnostics/wear-${name}-logcat.txt" || true
+  adb shell dumpsys activity activities > "diagnostics/wear-${name}-activity.txt" || true
+  adb shell dumpsys window windows > "diagnostics/wear-${name}-window.txt" || true
   adb exec-out screencap -p > "screenshots/FAILED-wear-${name}.png" || true
+  echo "----- Wear runtime crash excerpt -----"
+  grep -E -A35 -B8 'FATAL EXCEPTION|AndroidRuntime|Process: net\.wigle|Caused by:|am_crash|Force finishing' \
+    "diagnostics/wear-${name}-logcat.txt" | tail -n 260 || true
+  echo "----- Wear process / task state -----"
+  grep -E 'net\.wigle\.wigleandroid|mResumedActivity|topResumedActivity|mCurrentFocus|mFocusedApp' \
+    "diagnostics/wear-${name}-activity.txt" "diagnostics/wear-${name}-window.txt" | tail -n 120 || true
   exit 1
 }
 
