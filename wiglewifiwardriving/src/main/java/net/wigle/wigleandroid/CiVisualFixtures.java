@@ -40,6 +40,10 @@ public final class CiVisualFixtures {
                 .putBoolean(PreferenceKeys.PREF_STARINTEL_ENABLED, true)
                 .putBoolean(PreferenceKeys.PREF_STARINTEL_LIVE_INGEST, true)
                 .putBoolean(PreferenceKeys.PREF_STARINTEL_WEAR_SYNC, true)
+                .putBoolean(PreferenceKeys.PREF_USE_FOSS_MAPS, true)
+                .putFloat(PreferenceKeys.PREF_PREV_LAT, 39.9612f)
+                .putFloat(PreferenceKeys.PREF_PREV_LON, -82.9988f)
+                .putFloat(PreferenceKeys.PREF_PREV_ZOOM, 16.0f)
                 .putString(PreferenceKeys.PREF_STARINTEL_BASE_URL, "https://starintel.example")
                 .putString(PreferenceKeys.PREF_STARINTEL_DATASET, "field-ops-demo")
                 .putString(
