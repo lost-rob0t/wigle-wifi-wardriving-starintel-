@@ -700,7 +700,9 @@ public final class ListFragment extends Fragment implements ApiListener, DialogL
         }
         // always set our current list adapter
         if (null != state) {
-            state.wifiReceiver.setListAdapter(state.listAdapter);
+            if (null != state.wifiReceiver) {
+                state.wifiReceiver.setListAdapter(state.listAdapter);
+            }
             if (null != state.bluetoothReceiver) {
                 state.bluetoothReceiver.setListAdapter(state.listAdapter);
             }
