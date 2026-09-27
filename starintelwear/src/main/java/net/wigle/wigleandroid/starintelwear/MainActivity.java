@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -31,14 +33,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-/** Live StarIntel wrist dashboard: nearby Wi-Fi, geospatial map, watch hits, and stats. */
+/** Live StarIntel wrist dashboard: nearby Wi-Fi, geospatial radar, watch hits, and stats. */
 public final class MainActivity extends AppCompatActivity {
     private static final String PATH_REQUEST_SNAPSHOT = "/starintel/request-snapshot";
     private static final String EXTRA_CI_VISUAL = "ci_visual";
 
+    private static final int COLOR_BG = Color.rgb(6, 10, 16);
+    private static final int COLOR_CARD = Color.rgb(15, 24, 35);
+    private static final int COLOR_CARD_ALT = Color.rgb(20, 31, 44);
+    private static final int COLOR_STROKE = Color.rgb(39, 58, 76);
+    private static final int COLOR_TEXT = Color.rgb(244, 248, 252);
+    private static final int COLOR_MUTED = Color.rgb(143, 162, 181);
+    private static final int COLOR_CYAN = Color.rgb(102, 218, 255);
+    private static final int COLOR_ALERT = Color.rgb(255, 92, 112);
+    private static final int COLOR_ALERT_BG = Color.rgb(45, 18, 27);
+
     private WearStateStore store;
     private TextView status;
-    private TextView stats;
+    private TextView runValue;
+    private TextView newValue;
+    private TextView watchValue;
+    private TextView queueValue;
+    private TextView mapCaption;
     private TextView alert;
     private LinearLayout nearby;
     private RadarMapView map;
@@ -88,55 +104,135 @@ public final class MainActivity extends AppCompatActivity {
 
     private ScrollView buildUi() {
         final ScrollView scroll = new ScrollView(this);
+        scroll.setFillViewport(true);
+        scroll.setClipToPadding(false);
+        scroll.setBackgroundColor(COLOR_BG);
+
         final LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER_HORIZONTAL);
-        root.setPadding(dp(18), dp(14), dp(18), dp(32));
-        scroll.addView(root);
+        // Keep content inside the useful center of a round watch.
+        root.setPadding(dp(40), dp(34), dp(40), dp(44));
+        root.setBackgroundColor(COLOR_BG);
+        scroll.addView(root, new ScrollView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        final TextView title = label("STARINTEL", 18f, true);
-        root.addView(title);
+        final TextView title = label("STARINTEL", 13f, true, COLOR_CYAN);
+        title.setLetterSpacing(0.16f);
+        title.setGravity(Gravity.CENTER);
+        root.addView(title, matchWrap());
 
-        status = label("Waiting for phone…", 13f, false);
-        status.setPadding(0, dp(2), 0, dp(8));
-        root.addView(status);
+        status = label("WAITING FOR PHONE", 11f, true, COLOR_MUTED);
+        status.setLetterSpacing(0.05f);
+        status.setGravity(Gravity.CENTER);
+        final LinearLayout.LayoutParams statusParams = matchWrap();
+        statusParams.topMargin = dp(3);
+        statusParams.bottomMargin = dp(10);
+        root.addView(status, statusParams);
 
-        stats = label("", 15f, true);
-        stats.setGravity(Gravity.CENTER);
-        root.addView(stats);
+        final LinearLayout statRow = new LinearLayout(this);
+        statRow.setOrientation(LinearLayout.HORIZONTAL);
+        statRow.setGravity(Gravity.CENTER);
+        root.addView(statRow, matchWrap());
+
+        final LinearLayout runCard = statCard("RUN");
+        runValue = (TextView) runCard.getTag();
+        addWeightedCard(statRow, runCard, 0, dp(3));
+
+        final LinearLayout newCard = statCard("NEW");
+        newValue = (TextView) newCard.getTag();
+        addWeightedCard(statRow, newCard, dp(3), dp(3));
+
+        final LinearLayout watchCard = statCard("WATCH");
+        watchValue = (TextView) watchCard.getTag();
+        addWeightedCard(statRow, watchCard, dp(3), 0);
+
+        queueValue = label("QUEUE 0", 10f, true, COLOR_MUTED);
+        queueValue.setLetterSpacing(0.08f);
+        queueValue.setGravity(Gravity.CENTER);
+        final LinearLayout.LayoutParams queueParams = matchWrap();
+        queueParams.topMargin = dp(7);
+        queueParams.bottomMargin = dp(8);
+        root.addView(queueValue, queueParams);
+
+        mapCaption = label("RADAR", 10f, true, COLOR_MUTED);
+        mapCaption.setLetterSpacing(0.10f);
+        final LinearLayout.LayoutParams captionParams = matchWrap();
+        captionParams.bottomMargin = dp(5);
+        root.addView(mapCaption, captionParams);
 
         map = new RadarMapView(this);
+        map.setBackground(rounded(COLOR_CARD, COLOR_STROKE, 22));
         final LinearLayout.LayoutParams mapParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(190));
-        mapParams.topMargin = dp(8);
-        mapParams.bottomMargin = dp(8);
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(166));
+        mapParams.bottomMargin = dp(9);
         root.addView(map, mapParams);
 
-        alert = label("", 13f, true);
+        alert = label("", 12f, true, COLOR_TEXT);
         alert.setGravity(Gravity.CENTER);
-        root.addView(alert);
+        alert.setPadding(dp(12), dp(9), dp(12), dp(9));
+        alert.setBackground(rounded(COLOR_ALERT_BG, Color.rgb(105, 43, 57), 16));
+        root.addView(alert, matchWrap());
 
-        final TextView nearbyTitle = label("NEARBY", 13f, true);
-        nearbyTitle.setPadding(0, dp(12), 0, dp(4));
-        root.addView(nearbyTitle);
+        final TextView nearbyTitle = label("NEARBY  •  STRONGEST FIRST", 10f, true, COLOR_CYAN);
+        nearbyTitle.setLetterSpacing(0.08f);
+        final LinearLayout.LayoutParams nearbyTitleParams = matchWrap();
+        nearbyTitleParams.topMargin = dp(14);
+        nearbyTitleParams.bottomMargin = dp(6);
+        root.addView(nearbyTitle, nearbyTitleParams);
 
         nearby = new LinearLayout(this);
         nearby.setOrientation(LinearLayout.VERTICAL);
-        root.addView(nearby, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(nearby, matchWrap());
 
         final Button refresh = new Button(this);
         refresh.setText("Refresh phone");
         refresh.setAllCaps(false);
+        refresh.setTextSize(12f);
+        refresh.setTextColor(COLOR_BG);
+        refresh.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        refresh.setMinHeight(dp(44));
+        refresh.setBackground(rounded(COLOR_CYAN, 0, 20));
         refresh.setOnClickListener(v -> requestSnapshot());
-        final LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams buttonParams = matchWrap();
         buttonParams.topMargin = dp(10);
         root.addView(refresh, buttonParams);
 
         return scroll;
+    }
+
+    private LinearLayout statCard(final String caption) {
+        final LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setGravity(Gravity.CENTER);
+        card.setPadding(dp(4), dp(8), dp(4), dp(7));
+        card.setBackground(rounded(COLOR_CARD_ALT, COLOR_STROKE, 14));
+
+        final TextView value = label("0", 19f, true, COLOR_TEXT);
+        value.setGravity(Gravity.CENTER);
+        card.addView(value, matchWrap());
+
+        final TextView label = label(caption, 8.5f, true, COLOR_MUTED);
+        label.setLetterSpacing(0.08f);
+        label.setGravity(Gravity.CENTER);
+        card.addView(label, matchWrap());
+
+        card.setTag(value);
+        return card;
+    }
+
+    private void addWeightedCard(
+            final LinearLayout row,
+            final LinearLayout card,
+            final int leftMargin,
+            final int rightMargin
+    ) {
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        params.leftMargin = leftMargin;
+        params.rightMargin = rightMargin;
+        row.addView(card, params);
     }
 
     private void render() {
@@ -144,20 +240,25 @@ public final class MainActivity extends AppCompatActivity {
         final boolean scanning = live.optBoolean("scanning", false);
         final long updated = live.optLong("updated_at", 0L);
         status.setText(updated == 0
-                ? "Waiting for phone…"
-                : (scanning ? "● scanning" : "○ paused") + " · " + age(updated));
+                ? "WAITING FOR PHONE"
+                : (scanning ? "● SCANNING" : "○ PAUSED") + "  •  " + age(updated));
+        status.setTextColor(scanning ? COLOR_CYAN : COLOR_MUTED);
 
         final int run = live.optInt("run_networks", 0);
         final int fresh = live.optInt("new_networks", 0);
         final long hits = live.optLong("watch_hits", 0L);
         final int rules = live.optInt("watch_rules", 0);
         final int queued = live.optInt("queued_documents", 0);
-        stats.setText(
-                "RUN " + run + "   NEW " + fresh + "\n" +
-                "WATCH " + hits + "/" + rules + "   Q " + queued
-        );
+
+        runValue.setText(Integer.toString(run));
+        newValue.setText(Integer.toString(fresh));
+        watchValue.setText(hits + "/" + rules);
+        watchValue.setTextColor(hits > 0 ? COLOR_ALERT : COLOR_TEXT);
+        queueValue.setText("QUEUE  " + queued + "  •  STARINTEL 0.10.1");
 
         final JSONArray networks = live.optJSONArray("networks");
+        final int mapped = networks == null ? 0 : networks.length();
+        mapCaption.setText("RADAR  •  " + mapped + " MAPPED");
         map.setNetworks(networks);
         renderNearby(networks);
         renderAlert(live.optJSONObject("last_alert"));
@@ -166,7 +267,9 @@ public final class MainActivity extends AppCompatActivity {
     private void renderNearby(final JSONArray networks) {
         nearby.removeAllViews();
         if (networks == null || networks.length() == 0) {
-            nearby.addView(label("No networks synced yet.", 12f, false));
+            final TextView empty = label("No networks synced yet.", 11f, false, COLOR_MUTED);
+            empty.setGravity(Gravity.CENTER);
+            nearby.addView(empty, matchWrap());
             return;
         }
 
@@ -178,7 +281,7 @@ public final class MainActivity extends AppCompatActivity {
         rows.sort(Comparator.comparingInt(
                 (JSONObject row) -> row.optInt("rssi", -100)).reversed());
 
-        final int limit = Math.min(12, rows.size());
+        final int limit = Math.min(10, rows.size());
         for (int i = 0; i < limit; i++) {
             final JSONObject row = rows.get(i);
             final String ssid = row.optString("ssid", "");
@@ -186,20 +289,44 @@ public final class MainActivity extends AppCompatActivity {
             final int rssi = row.optInt("rssi", -100);
             final int channel = row.optInt("channel", 0);
             final String title = ssid.isEmpty() ? "(hidden)" : ssid;
-            final TextView view = label(
-                    title + "\n" + bssid + "  " + rssi + " dBm" +
-                            (channel > 0 ? "  ch " + channel : ""),
-                    12f,
-                    false
+
+            final LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.HORIZONTAL);
+            card.setGravity(Gravity.CENTER_VERTICAL);
+            card.setPadding(dp(11), dp(8), dp(11), dp(8));
+            card.setBackground(rounded(COLOR_CARD, COLOR_STROKE, 13));
+
+            final LinearLayout identity = new LinearLayout(this);
+            identity.setOrientation(LinearLayout.VERTICAL);
+            final TextView ssidView = label(title, 12.5f, true, COLOR_TEXT);
+            final TextView macView = label(shortMac(bssid), 9.5f, false, COLOR_MUTED);
+            macView.setTypeface(Typeface.MONOSPACE);
+            identity.addView(ssidView, matchWrap());
+            identity.addView(macView, matchWrap());
+            card.addView(identity, new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+            final TextView signal = label(
+                    rssi + " dBm" + (channel > 0 ? "\nch " + channel : ""),
+                    10f,
+                    true,
+                    signalColor(rssi)
             );
-            view.setPadding(dp(6), dp(5), dp(6), dp(5));
-            nearby.addView(view);
+            signal.setGravity(Gravity.END);
+            card.addView(signal, new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            final LinearLayout.LayoutParams cardParams = matchWrap();
+            cardParams.bottomMargin = dp(6);
+            nearby.addView(card, cardParams);
         }
     }
 
     private void renderAlert(final JSONObject lastAlert) {
         if (lastAlert == null || lastAlert.length() == 0) {
-            alert.setText("No watch hits this session");
+            alert.setText("WATCHLIST ARMED\nNo hits this session");
+            alert.setTextColor(COLOR_MUTED);
             return;
         }
         final JSONObject data = lastAlert.optJSONObject("data");
@@ -208,8 +335,14 @@ public final class MainActivity extends AppCompatActivity {
         final int severity = data == null ? 0 : data.optInt("severity", 0);
         final String ssid = wigle == null ? "" : wigle.optString("ssid", "");
         final String bssid = wigle == null ? "" : wigle.optString("bssid", "");
-        alert.setText("⚠ WATCH " + severity + "\n" +
-                (ssid.isEmpty() ? "(hidden)" : ssid) + "\n" + bssid);
+        final int rssi = wigle == null ? 0 : wigle.optInt("signal_dbm", 0);
+
+        alert.setTextColor(COLOR_TEXT);
+        alert.setText(
+                "⚠  WATCH HIT  •  " + severity + "\n" +
+                (ssid.isEmpty() ? "(hidden)" : ssid) + "  " +
+                shortMac(bssid) + (rssi != 0 ? "  •  " + rssi + " dBm" : "")
+        );
     }
 
     private void seedCiVisualState() {
@@ -279,12 +412,13 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void requestSnapshot() {
-        status.setText("Requesting phone…");
+        status.setText("REQUESTING PHONE…");
+        status.setTextColor(COLOR_MUTED);
         Wearable.getNodeClient(this)
                 .getConnectedNodes()
                 .addOnSuccessListener(nodes -> {
                     if (nodes.isEmpty()) {
-                        status.setText("Phone not connected");
+                        status.setText("PHONE NOT CONNECTED");
                         return;
                     }
                     for (Node node : nodes) {
@@ -296,7 +430,7 @@ public final class MainActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(ex ->
-                        status.setText("Data Layer unavailable"));
+                        status.setText("DATA LAYER UNAVAILABLE"));
     }
 
     private void maybeRequestNotifications() {
@@ -311,12 +445,45 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    private TextView label(final String value, final float sp, final boolean bold) {
+    private TextView label(
+            final String value,
+            final float sp,
+            final boolean bold,
+            final int color
+    ) {
         final TextView view = new TextView(this);
         view.setText(value);
         view.setTextSize(sp);
+        view.setTextColor(color);
+        view.setIncludeFontPadding(false);
         if (bold) view.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         return view;
+    }
+
+    private GradientDrawable rounded(final int fill, final int stroke, final int radiusDp) {
+        final GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(fill);
+        drawable.setCornerRadius(dp(radiusDp));
+        if (stroke != 0) drawable.setStroke(dp(1), stroke);
+        return drawable;
+    }
+
+    private LinearLayout.LayoutParams matchWrap() {
+        return new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+    }
+
+    private int signalColor(final int rssi) {
+        if (rssi >= -50) return COLOR_ALERT;
+        if (rssi >= -67) return COLOR_CYAN;
+        return COLOR_MUTED;
+    }
+
+    private static String shortMac(final String value) {
+        if (value == null || value.length() < 8) return value == null ? "" : value;
+        return value.substring(Math.max(0, value.length() - 8));
     }
 
     private String age(final long timestamp) {
