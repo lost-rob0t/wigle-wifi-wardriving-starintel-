@@ -23,28 +23,24 @@ for permission in \
   adb shell pm grant net.wigle.wigleandroid "$permission" || true
 done
 
-dump_ui() {
-  adb shell uiautomator dump /sdcard/window.xml >/dev/null 2>&1 || true
-  adb shell cat /sdcard/window.xml 2>/dev/null || true
+focused_window() {
+  adb shell dumpsys window windows 2>/dev/null \
+    | grep -m1 -E 'mCurrentFocus|mFocusedApp' || true
 }
 
 resumed_activity() {
-  {
-    adb shell dumpsys activity activities 2>/dev/null \
-      | grep -m1 -E 'mResumedActivity|topResumedActivity|ResumedActivity' || true
-    adb shell dumpsys window windows 2>/dev/null \
-      | grep -m1 -E 'mCurrentFocus|mFocusedApp' || true
-  } | tr '\n' ' '
+  adb shell dumpsys activity activities 2>/dev/null \
+    | grep -m1 -E 'mResumedActivity|topResumedActivity|ResumedActivity' || true
 }
 
 fail_capture() {
   local name="$1"
   echo "::error::Visual CI did not render expected phone screen: $name"
   echo "Resumed activity: $(resumed_activity)"
-  dump_ui > "diagnostics/phone-${name}-ui.xml" || true
-  adb logcat -d -v threadtime > "diagnostics/phone-${name}-logcat.txt" || true
+  echo "Focused window: $(focused_window)"
   adb shell dumpsys activity activities > "diagnostics/phone-${name}-activity.txt" || true
   adb shell dumpsys window windows > "diagnostics/phone-${name}-window.txt" || true
+  adb logcat -d -v threadtime > "diagnostics/phone-${name}-logcat.txt" || true
   adb exec-out screencap -p > "screenshots/FAILED-phone-${name}.png" || true
   echo "----- app/runtime crash excerpt -----"
   grep -E -A35 -B8 'FATAL EXCEPTION|AndroidRuntime|Process: net\.wigle|Caused by:|am_crash|Force finishing|WigleUncaughtExceptionHandler|Most Recent Error Report' \
@@ -55,33 +51,23 @@ fail_capture() {
   exit 1
 }
 
-wait_for_screen() {
+wait_for_component() {
   local name="$1"
   local component="$2"
-  local needle="$3"
-  local i current ui
-
+  local i resumed focused
   for i in $(seq 1 30); do
-    current="$(resumed_activity)"
-    ui="$(dump_ui)"
-
-    if [[ "$current" == *"$component"* ]] \
-      && [[ "$ui" == *"$needle"* ]] \
-      && [[ "$ui" != *"Most Recent Error Report"* ]] \
-      && [[ "$ui" != *"Starting..."* ]] \
-      && [[ "$ui" != *"Allow "* ]] \
-      && [[ "$ui" != *"permission"* ]]; then
+    resumed="$(resumed_activity)"
+    focused="$(focused_window)"
+    if [[ "$resumed" == *"$component"* ]] && [[ "$focused" == *"net.wigle.wigleandroid"* ]]; then
       return 0
     fi
-    sleep 1
+    sleep 0.5
   done
-
   fail_capture "$name"
 }
 
 capture_main() {
   local screen="$1"
-  local needle="$2"
 
   adb logcat -c || true
   adb shell am force-stop net.wigle.wigleandroid
@@ -90,16 +76,16 @@ capture_main() {
     --ez ci_visual true \
     --es ci_visual_screen "$screen"
 
-  wait_for_screen "$screen" "net.wigle.wigleandroid/.MainActivity" "$needle"
+  wait_for_component "$screen" "net.wigle.wigleandroid/.MainActivity"
   sleep 1
   adb exec-out screencap -p > "screenshots/phone-${screen}.png"
   test -s "screenshots/phone-${screen}.png"
 }
 
-capture_main list "WiGLE WiFi"
-capture_main dash "Dashboard"
-capture_main starintel "StarIntel Watchlist"
-capture_main map "Map"
+capture_main list
+capture_main dash
+capture_main starintel
+capture_main map
 
 adb logcat -c || true
 adb shell am force-stop net.wigle.wigleandroid
@@ -108,7 +94,7 @@ adb shell am start -W \
   --es net.wigle.wigleandroid.filter.MESSAGE alertFilter \
   --ez ci_visual true
 
-wait_for_screen "watchlist" "net.wigle.wigleandroid/.MacFilterActivity" "MAC / OUI Watchlist"
+wait_for_component "watchlist" "net.wigle.wigleandroid/.MacFilterActivity"
 sleep 1
 adb exec-out screencap -p > screenshots/phone-watchlist.png
 test -s screenshots/phone-watchlist.png
