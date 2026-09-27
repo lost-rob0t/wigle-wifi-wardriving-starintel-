@@ -51,11 +51,11 @@ jobs:
             wiglewifiwardriving/build/outputs/apk/debug/*.apk
             starintelwear/build/outputs/apk/debug/*.apk
 
-  visual:
+  visual-phone:
     if: github.event_name == 'pull_request'
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
             | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-          mkdir -p screenshots
+          mkdir -p screenshots diagnostics
 
       - name: Capture phone screenshots
         uses: ReactiveCircus/android-emulator-runner@v2
@@ -86,6 +86,46 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: bash .github/scripts/capture-phone-screenshots.sh
+
+      - name: Upload phone diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-visual-phone-diagnostics-pr-${{ github.event.pull_request.number }}
+          if-no-files-found: warn
+          path: |
+            screenshots/*.png
+            diagnostics/**
+
+      - name: Upload phone screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-visual-phone-pr-${{ github.event.pull_request.number }}
+          if-no-files-found: error
+          path: screenshots/phone-*.png
+
+  visual-wear:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download built APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: starintel-wigle-android-debug
+          path: artifacts
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          mkdir -p screenshots diagnostics
 
       - name: Capture Wear OS screenshots
         uses: ReactiveCircus/android-emulator-runner@v2
@@ -101,22 +141,43 @@ jobs:
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: bash .github/scripts/capture-wear-screenshots.sh
 
-      - name: Upload visual diagnostics
+      - name: Upload Wear diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: android-visual-diagnostics-pr-${{ github.event.pull_request.number }}
+          name: android-visual-wear-diagnostics-pr-${{ github.event.pull_request.number }}
           if-no-files-found: warn
           path: |
             screenshots/*.png
             diagnostics/**
 
-      - name: Upload visual CI screenshots
+      - name: Upload Wear screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: android-visual-ci-pr-${{ github.event.pull_request.number }}
+          name: android-visual-wear-pr-${{ github.event.pull_request.number }}
           if-no-files-found: error
-          path: screenshots/*.png
+          path: screenshots/wear-*.png
+
+  visual-publish:
+    if: github.event_name == 'pull_request'
+    needs: [visual-phone, visual-wear]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download phone screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: android-visual-phone-pr-${{ github.event.pull_request.number }}
+          path: screenshots
+
+      - name: Download Wear screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: android-visual-wear-pr-${{ github.event.pull_request.number }}
+          path: screenshots
 
       - name: Publish stable screenshot URLs
         env:
@@ -138,6 +199,7 @@ jobs:
           # Android visual CI — PR #${PR_NUMBER}
 
           Generated from ${GITHUB_SHA} by Actions run ${GITHUB_RUN_ID}.
+          Both phone and Wear visual gates passed before this gallery was published.
           EOF
 
           git add "${SNAPSHOT_DIR}"
@@ -161,7 +223,7 @@ jobs:
           ${MARKER}
           ## Android visual CI
 
-          Built from \`${GITHUB_SHA}\`. These are emulator screenshots of the actual debug APKs produced by this PR.
+          Built from \`${GITHUB_SHA}\`. Phone and Wear emulator validation both passed before these images were published.
 
           ### Phone — live list
           ![Phone list](${RAW}/phone-list.png)
@@ -187,7 +249,7 @@ jobs:
           ### Wear OS — complication provider
           ![Wear complication](${RAW}/wear-complication.png)
 
-          [Download all screenshots / inspect the Actions run](${RUN_URL})
+          [Inspect the Actions run](${RUN_URL})
           EOF
           )"
 
