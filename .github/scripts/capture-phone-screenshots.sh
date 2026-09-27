@@ -52,11 +52,10 @@ fail_capture() {
 wait_for_component() {
   local name="$1"
   local component="$2"
-  local i resumed focused
+  local i resumed
   for i in $(seq 1 30); do
     resumed="$(resumed_activity)"
-    focused="$(focused_window)"
-    if [[ "$resumed" == *"$component"* ]] && [[ "$focused" == *"net.wigle.wigleandroid"* ]]; then
+    if [[ "$resumed" == *"$component"* ]]; then
       return 0
     fi
     sleep 0.5
