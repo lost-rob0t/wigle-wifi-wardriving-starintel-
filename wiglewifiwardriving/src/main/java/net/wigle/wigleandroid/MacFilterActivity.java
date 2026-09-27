@@ -58,6 +58,10 @@ public class MacFilterActivity extends ScreenChildActivity {
         EdgeToEdge.enable(this);
         View addressFilterWrapper = findViewById(R.id.address_filter_wrapper);
         if (null != addressFilterWrapper) {
+            final int baseLeft = addressFilterWrapper.getPaddingLeft();
+            final int baseTop = addressFilterWrapper.getPaddingTop();
+            final int baseRight = addressFilterWrapper.getPaddingRight();
+            final int baseBottom = addressFilterWrapper.getPaddingBottom();
             ViewCompat.setOnApplyWindowInsetsListener(addressFilterWrapper, new OnApplyWindowInsetsListener() {
                         @Override
                         public @org.jspecify.annotations.NonNull WindowInsetsCompat onApplyWindowInsets(@org.jspecify.annotations.NonNull View v, @org.jspecify.annotations.NonNull WindowInsetsCompat insets) {
@@ -65,7 +69,10 @@ public class MacFilterActivity extends ScreenChildActivity {
                                     WindowInsetsCompat.Type.statusBars() |
                                             WindowInsetsCompat.Type.displayCutout());
                             v.setPadding(
-                                    innerPadding.left, innerPadding.top, innerPadding.right, innerPadding.bottom
+                                    baseLeft + innerPadding.left,
+                                    baseTop + innerPadding.top,
+                                    baseRight + innerPadding.right,
+                                    baseBottom + innerPadding.bottom
                             );
                             return insets;
                         }
