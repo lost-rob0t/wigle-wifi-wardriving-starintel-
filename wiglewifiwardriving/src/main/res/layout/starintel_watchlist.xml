@@ -73,7 +73,7 @@
                     android:backgroundTint="#47627A"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:textAllCaps="true"
-                    android:hint="AA:BB:CC:DD:EE:FF"
+                    android:hint="AABBCCDDEEFF"
                     mask:allowed_chars="1234567890ABCDEFabcdef"
                     mask:mask="##:##:##:##:##:##" />
 
@@ -109,7 +109,7 @@
                     android:backgroundTint="#47627A"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:textAllCaps="true"
-                    android:hint="AA:BB:CC"
+                    android:hint="AABBCC"
                     mask:allowed_chars="1234567890ABCDEFabcdef"
                     mask:mask="##:##:##" />
 
