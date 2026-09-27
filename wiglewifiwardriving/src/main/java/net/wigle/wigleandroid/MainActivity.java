@@ -460,30 +460,30 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             }
         }
 
-        Logging.info("MAIN: setupService");
-        setupService();
-        Logging.info("MAIN: checkStorage");
-        checkStorage();
-        Logging.info("MAIN: setupDatabase");
-        setupDatabase(prefs);
-        Logging.info("MAIN: setupBattery");
-        setupBattery();
-        Logging.info("MAIN: setupScreenStateReceiver");
-        setupScreenStateReceiver();
-        Logging.info("MAIN: setupSound");
         if (!ciVisualMode) {
+            Logging.info("MAIN: setupService");
+            setupService();
+            Logging.info("MAIN: checkStorage");
+            checkStorage();
+            Logging.info("MAIN: setupDatabase");
+            setupDatabase(prefs);
+            Logging.info("MAIN: setupBattery");
+            setupBattery();
+            Logging.info("MAIN: setupScreenStateReceiver");
+            setupScreenStateReceiver();
+            Logging.info("MAIN: setupSound");
             setupSound();
-        }
-        Logging.info("MAIN: setupActivationDialog");
-        if (!ciVisualMode) {
+            Logging.info("MAIN: setupActivationDialog");
             setupActivationDialog(prefs);
+            Logging.info("MAIN: setupBluetooth");
+            setupBluetooth(prefs);
+            Logging.info("MAIN: setupWifi");
+            setupWifi(prefs);
+            Logging.info("MAIN: setupLocation"); // must be after setupWifi
+            setupLocation(prefs);
+        } else {
+            Logging.info("MAIN: CI visual mode - skipping hardware, DB, and service startup");
         }
-        Logging.info("MAIN: setupBluetooth");
-        setupBluetooth(prefs);
-        Logging.info("MAIN: setupWifi");
-        setupWifi(prefs);
-        Logging.info("MAIN: setupLocation"); // must be after setupWifi
-        setupLocation(prefs);
         Logging.info("MAIN: setup tabs");
         if (savedInstanceState == null) {
             setupFragments();
@@ -496,27 +496,26 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             state.currentTab = CiVisualFixtures.requestedNavId(getIntent());
         }
 
-        Logging.info("MAIN: first install check");
-        // ALIBI: don't inherit MxC implant failures from backups.
-        if (InstallUtility.isFirstInstall(this)) {
-            SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.remove(ListFragment.PREF_MXC_REINSTALL_ATTEMPTED);
-            if (!isImperialUnitsLocale()) {
-                editor.putBoolean(PreferenceKeys.PREF_METRIC, true);
+        if (!ciVisualMode) {
+            Logging.info("MAIN: first install check");
+            // ALIBI: don't inherit MxC implant failures from backups.
+            if (InstallUtility.isFirstInstall(this)) {
+                SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = mySPrefs.edit();
+                editor.remove(ListFragment.PREF_MXC_REINSTALL_ATTEMPTED);
+                if (!isImperialUnitsLocale()) {
+                    editor.putBoolean(PreferenceKeys.PREF_METRIC, true);
+                }
+                editor.apply();
             }
-            editor.apply();
+
+            Logging.info("MAIN: cell data check");
+            state.mxcDbHelper.implantMxcDatabase(this, isFinishing());
+
+            Logging.info("MAIN: keystore check");
+            // rksh 20160202 - api/authuser secure preferences storage
+            checkInitKeystore(prefs);
         }
-
-        Logging.info("MAIN: cell data check");
-        //TODO: if we can determine whether DB needs updating, we can avoid copying every time
-        //if (!state.mxcDbHelper.isPresent()) {
-        state.mxcDbHelper.implantMxcDatabase(this, isFinishing());
-        //}
-
-        Logging.info("MAIN: keystore check");
-        // rksh 20160202 - api/authuser secure preferences storage
-        checkInitKeystore(prefs);
 
         // show the selected screen
         selectFragment(state.currentTab);
