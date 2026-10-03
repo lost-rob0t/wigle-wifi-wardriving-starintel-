@@ -1,6 +1,9 @@
 package net.wigle.wigleandroid.warstar;
 
 import android.content.Context;
+import android.location.Location;
+import net.wigle.wigleandroid.model.Network;
+import net.wigle.wigleandroid.model.NetworkType;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import net.wigle.wigleandroid.MainActivity;
@@ -111,8 +114,11 @@ public final class WarStarClient {
     }
 
     /** Stream a WiGLE CSV or CSV.GZ export in bounded, retry-safe batches. */
-    public int importWigleCsv(InputStream source, String importKey) throws Exception {
-        if (token == null) throw new IOException("Sign in first");
+    public int importWigleCsv(InputStream source, String importKey, boolean upload) throws Exception {
+        if (upload && token == null) throw new IOException("Sign in first");
+        MainActivity.State state = MainActivity.getStaticState();
+        DatabaseHelper local = state == null ? null : state.dbHelper;
+        if (!upload && local == null) throw new IOException("Scanner database unavailable");
         String importId = UUID.nameUUIDFromBytes(importKey.getBytes(StandardCharsets.UTF_8)).toString();
         PushbackInputStream input = new PushbackInputStream(source, 2);
         byte[] magic = new byte[2];
@@ -159,22 +165,46 @@ public final class WarStarClient {
                     if (parsed == null) continue;
                     item.put("time", parsed.getTime());
                     item.put("source", "wigle-csv");
-                    batch.put(item);
-                    if (batch.length() == 100) {
-                        sendBatch(importId, batch);
-                        total += batch.length();
-                        batch = new JSONArray();
+                    if (upload) {
+                        batch.put(item);
+                        if (batch.length() == 100) {
+                            sendBatch(importId, batch);
+                            total += batch.length();
+                            batch = new JSONArray();
+                        }
+                    } else {
+                        NetworkType radio = radioType(item.getString("radio"));
+                        Location location = new Location("wigle-import");
+                        location.setLatitude(item.getDouble("latitude"));
+                        location.setLongitude(item.getDouble("longitude"));
+                        location.setTime(item.getLong("time"));
+                        Network network = new Network(address, item.getString("name"), 0,
+                                item.getString("security"), item.getInt("level"), radio);
+                        local.blockingAddExternalObservation(network, location, true);
+                        total++;
                     }
                 } catch (IllegalArgumentException | java.text.ParseException ignored) {
                     // A malformed WiGLE row does not invalidate the rest of the export.
                 }
             }
-            if (batch.length() > 0) {
+            if (upload && batch.length() > 0) {
                 sendBatch(importId, batch);
                 total += batch.length();
             }
         }
         return total;
+    }
+
+    private static NetworkType radioType(String radio) throws IOException {
+        switch (radio.toUpperCase(Locale.ROOT)) {
+            case "W":
+            case "WIFI": return NetworkType.WIFI;
+            case "B":
+            case "BT": return NetworkType.BT;
+            case "E":
+            case "BLE": return NetworkType.BLE;
+            default: throw new IOException("Unsupported WiGLE radio: " + radio);
+        }
     }
 
     private static String field(CSVRecord row, Map<String, Integer> columns, String name) {
@@ -198,7 +228,11 @@ public final class WarStarClient {
         long cursorId = prefs.getLong(PREF_CURSOR, 0);
         long lastId = cursorId;
         JSONArray observations = new JSONArray();
-        try (Cursor rows = db.locationIterator(cursorId)) {
+        try (Cursor rows = db.query(
+                "SELECT _id,bssid,level,lat,lon,altitude,accuracy,time,mfgrid,external " +
+                "FROM location WHERE _id > ? AND lat BETWEEN -90 AND 90 " +
+                "AND lon BETWEEN -180 AND 180 ORDER BY _id LIMIT 100",
+                new String[]{Long.toString(cursorId)})) {
             while (rows.moveToNext() && observations.length() < 100) {
                 long rowId = rows.getLong(0);
                 JSONObject item = new JSONObject();
@@ -211,6 +245,7 @@ public final class WarStarClient {
                 item.put("accuracy", rows.getDouble(6));
                 item.put("time", rows.getLong(7));
                 item.put("manufacturer_id", rows.getInt(8));
+                item.put("source", rows.getInt(9) == 1 ? "wigle-import" : "local-scan");
                 try (Cursor network = db.query("SELECT type, ssid, frequency FROM network WHERE bssid = ?",
                         new String[]{rows.getString(1)})) {
                     if (network.moveToFirst()) {

@@ -17,11 +17,12 @@ console are branded WarStar.
    update the scanner's existing MAC alert matcher.
 4. In Settings, switch **Show repeat devices in scan list** off to display
    devices first observed by this installation.
-5. Import a WiGLE CSV or CSV.GZ export, upload the entire local observation
-   database in bounded batches, or export the latest run or whole wireless
-   database as Star Language 0.10.1 NDJSON documents. Upload is only available
-   when a compatible StarIntel ingest server add-on is enabled. A cursor moves
-   only after acknowledgment.
+5. Import a WiGLE CSV or CSV.GZ export into the local database while offline, or
+   send it to StarIntel after signing in. Upload the entire local observation
+   database, including imported observations, in bounded batches; export the
+   latest run or whole wireless database as Star Language 0.10.1 NDJSON
+   documents. Upload needs a compatible StarIntel ingest server add-on. A cursor
+   moves only after acknowledgment.
 6. Generate a nearby low coverage GPX route. The algorithm uses a 7×7 grid of
    250 m cells around the current GPS fix, picks eight cells with the fewest
    locally stored observations, orders them by nearest neighbor, and shares

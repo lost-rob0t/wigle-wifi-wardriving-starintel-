@@ -128,12 +128,8 @@ public final class WarStarFragment extends Fragment {
         }));
         button("Upload next 100 observations", column).setOnClickListener(view -> run(() ->
                 "Uploaded " + client.uploadNextBatch() + " observations"));
-        button("Import WiGLE CSV / CSV.GZ", column).setOnClickListener(view -> {
-            Intent pick = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            pick.setType("*/*");
-            pick.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(pick, 721);
-        });
+        button("Import WiGLE CSV offline", column).setOnClickListener(view -> pickCsv(721));
+        button("Import WiGLE CSV to StarIntel", column).setOnClickListener(view -> pickCsv(723));
         button("Upload entire local database", column).setOnClickListener(view -> run(() -> {
             int total = 0;
             int count;
@@ -205,6 +201,13 @@ public final class WarStarFragment extends Fragment {
         }
     }
 
+    private void pickCsv(int requestCode) {
+        Intent pick = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        pick.setType("*/*");
+        pick.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(pick, requestCode);
+    }
+
     private void chooseExport(boolean latestRun) {
         exportLatestRun = latestRun;
         Intent create = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -229,12 +232,14 @@ public final class WarStarFragment extends Fragment {
                 }
             });
         }
-        if (requestCode == 721 && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+        if ((requestCode == 721 || requestCode == 723) && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             android.net.Uri selected = data.getData();
             run(() -> {
                 try (java.io.InputStream input = requireContext().getContentResolver().openInputStream(selected)) {
                     if (input == null) throw new java.io.IOException("Cannot open export");
-                    return "Imported " + client.importWigleCsv(input, selected.toString()) + " observations";
+                    int count = client.importWigleCsv(input, selected.toString(), requestCode == 723);
+                    return requestCode == 723 ? "Sent " + count + " WiGLE observations" :
+                            "Queued " + count + " WiGLE observations locally";
                 }
             });
         }

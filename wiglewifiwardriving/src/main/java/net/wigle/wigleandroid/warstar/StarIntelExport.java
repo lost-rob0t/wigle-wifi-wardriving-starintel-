@@ -28,7 +28,10 @@ public final class StarIntelExport {
         }
         int count = 0;
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
-        try (Cursor rows = db.locationIterator(0)) {
+        try (Cursor rows = latestRun ? db.locationIterator(0) : db.query(
+                "SELECT _id,bssid,level,lat,lon,altitude,accuracy,time,mfgrid FROM location " +
+                "WHERE lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180 ORDER BY _id",
+                new String[]{})) {
             while (rows.moveToNext()) {
                 long time = rows.getLong(7);
                 if (time < min || time > max) continue;
