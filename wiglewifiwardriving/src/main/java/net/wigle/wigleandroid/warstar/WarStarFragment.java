@@ -31,7 +31,7 @@ public final class WarStarFragment extends Fragment {
     private final ExecutorService io = Executors.newSingleThreadExecutor();
     private WarStarClient client;
     private TextView status;
-    private TextView targets;
+    private LinearLayout targets;
     private EditText url;
     private EditText token;
     private boolean exportLatestRun;
@@ -169,22 +169,40 @@ public final class WarStarFragment extends Fragment {
         status = text(client.signedIn() ? "Connected" : "Sign in to sync and upload", 14);
         column.addView(status);
         column.addView(text("WIRELESS TARGETS", 18));
-        targets = text("", 14);
+        targets = new LinearLayout(requireContext());
+        targets.setOrientation(LinearLayout.VERTICAL);
         column.addView(targets);
         showTargets(client.cachedTargets());
         return scroll;
     }
 
     private void showTargets(JSONArray docs) {
-        StringBuilder rendered = new StringBuilder();
+        targets.removeAllViews();
+        if (docs.length() == 0) {
+            targets.addView(text("No wireless targets yet.", 14));
+            return;
+        }
         for (int i = 0; i < docs.length(); i++) {
             JSONObject doc = docs.optJSONObject(i);
             if (doc == null) continue;
-            rendered.append("• ").append(doc.optString("_id", "Target")).append("\n");
             JSONObject data = doc.optJSONObject("data");
-            if (data != null) rendered.append(data.optString("target", "")).append("\n");
+            String id = doc.optString("id", doc.optString("_id", "Target"));
+            String subject = doc.optString("target", data == null ? "" : data.optString("target"));
+            targets.addView(text(id + "\n" + subject, 14));
+            if (subject.matches("(?i)[0-9a-f]{2}(:[0-9a-f]{2}){5}")) {
+                String radio = doc.optString("radio", data == null ? "WIFI" : data.optString("radio", "WIFI"));
+                String type = "BT".equalsIgnoreCase(radio) || "BLE".equalsIgnoreCase(radio)
+                        ? radio.toUpperCase(java.util.Locale.ROOT) : "WIFI";
+                button("Mark • alert when seen", targets).setOnClickListener(view -> {
+                    try {
+                        DeviceTags.markTarget(requireContext(), type, subject, id);
+                        status.setText("Marked " + subject + " as a " + type + " target");
+                    } catch (org.json.JSONException exception) {
+                        status.setText("Could not mark target");
+                    }
+                });
+            }
         }
-        targets.setText(rendered.length() == 0 ? "No wireless targets yet." : rendered.toString());
     }
 
     private void chooseExport(boolean latestRun) {
