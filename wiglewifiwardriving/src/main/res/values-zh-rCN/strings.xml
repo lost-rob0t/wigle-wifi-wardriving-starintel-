@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats">开始</string>
-    <string name="app_name">WiGLE Wifi 无线探测攻击</string>
-    <string name="list_app_name">WiGLE Wifi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">设置</string>
     <string name="mapping_app_name">OpenStreetMap</string>
     <string name="dashboard_app_name">仪表盘</string>

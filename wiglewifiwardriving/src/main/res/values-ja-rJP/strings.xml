@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">起動</string>
-    <string name="app_name">WiGLE WiFiウォードライビング</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">設定</string>
     <string name="mapping_app_name">マップ</string>
     <string name="dashboard_app_name">ダッシュボード</string>
