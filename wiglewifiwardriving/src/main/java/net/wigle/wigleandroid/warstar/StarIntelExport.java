@@ -28,9 +28,10 @@ public final class StarIntelExport {
         }
         int count = 0;
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
-        try (Cursor rows = latestRun ? db.locationIterator(0) : db.query(
-                "SELECT _id,bssid,level,lat,lon,altitude,accuracy,time,mfgrid FROM location " +
-                "WHERE lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180 ORDER BY _id",
+        try (Cursor rows = db.query(
+                "SELECT _id,bssid,level,lat,lon,altitude,accuracy,time,mfgrid,external FROM location " +
+                "WHERE lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180 " +
+                (latestRun ? "AND external = 0 " : "") + "ORDER BY _id",
                 new String[]{})) {
             while (rows.moveToNext()) {
                 long time = rows.getLong(7);
@@ -45,6 +46,7 @@ public final class StarIntelExport {
                 String id = "star:warstar:" + installation + ":" + rows.getLong(0);
                 String geoId = id + ":geo";
                 JSONObject point = base(geoId, "geo-point", time);
+                point.put("sourceKinds", new org.json.JSONArray().put(rows.getInt(9) == 1 ? "import" : "sensor"));
                 point.put("geometryType", "point");
                 point.put("latitude", decimal(rows.getDouble(3)));
                 point.put("longitude", decimal(rows.getDouble(4)));
@@ -65,6 +67,7 @@ public final class StarIntelExport {
                     }
                     boolean wifi = "W".equalsIgnoreCase(type) || "WIFI".equalsIgnoreCase(type);
                     device = base(id, wifi ? "wireless-network" : "network-device", time);
+                    device.put("sourceKinds", new org.json.JSONArray().put(rows.getInt(9) == 1 ? "import" : "sensor"));
                     if (wifi) {
                         device.put("bssid", address);
                         if (name != null) device.put("ssid", name);
