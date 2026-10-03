@@ -85,6 +85,7 @@ import net.wigle.wigleandroid.ui.ScreenChildActivity;
 import net.wigle.wigleandroid.ui.WiGLEConfirmationDialog;
 import net.wigle.wigleandroid.ui.WiGLEToast;
 import net.wigle.wigleandroid.util.BluetoothUtil;
+import net.wigle.wigleandroid.warstar.TagDialog;
 import net.wigle.wigleandroid.util.Logging;
 import net.wigle.wigleandroid.util.PreferenceKeys;
 import net.wigle.wigleandroid.util.RssiHistoryCache;
@@ -349,6 +350,16 @@ public abstract class AbstractNetworkActivity extends ScreenChildActivity implem
         if (network == null) {
             Logging.info("no network found in cache for bssid: " + bssid);
         } else {
+            // Device tags are shared by Wi-Fi, classic Bluetooth, and BLE.
+            final ViewGroup title = findViewById(R.id.na_network_title);
+            if (title != null) {
+                Button tags = new Button(this);
+                tags.setText("Tags");
+                tags.setContentDescription("Edit device tags and alerts");
+                tags.setOnClickListener(view -> TagDialog.show(this,
+                        network.getType().name(), network.getBssid()));
+                title.addView(tags);
+            }
             // do gui work
             tv = findViewById(R.id.ssid);
             tv.setText(network.getSsid());

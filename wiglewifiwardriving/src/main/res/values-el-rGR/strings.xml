@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">Έναρξη</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Ρυθμίσεις</string>
     <string name="mapping_app_name">Χάρτης</string>
     <string name="dashboard_app_name">Αρχική</string>
@@ -168,7 +168,7 @@
     <string name="have_location">Λήψη τοποθεσίας από</string>
     <string name="wifi_jammed">Το WiFi φαίνεται να έχει μπλοκάρει, γίνεται επανεκκίνηση του WiFi.</string>
     <string name="battery_at">Επίπεδο μπαταρίας στο</string>
-    <string name="battery_postfix">τοις εκατό, τερματισμός του WiGLE WiFi</string>
+    <string name="battery_postfix">τοις εκατό, τερματισμός του WarStar WiFi</string>
     <string name="scan">Σάρωση</string>
     <string name="menu_exit">Έξοδος</string>
     <string name="menu_settings">Ρυθμίσεις</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Προειδοποίηση, η τελευταία σάρωση WiFi ολοκληρώθηκε</string>
     <string name="wifi_restart_2">δευτερόλεπτα πριν. Επανεκκίνηση WiFi.</string>
     <string name="use_wigle_tiles">Χρήση χαρτών WiGLE OSM</string>
-    <string name="wigle_service">Υπηρεσία WiGLE WiFi</string>
+    <string name="wigle_service">Υπηρεσία WarStar WiFi</string>
     <string name="disable_toast">Απενεργοποίηση αναδυόμενων ειδοποιήσεων (toast)</string>
     <string name="menu_cluster_off">Ομαδοποίηση Ανενεργή</string>
     <string name="menu_cluster_on">Ομαδοποίηση Ενεργή</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Κοινοποίηση με χρήση</string>
     <string name="settings_gps_timeout">Λήξη Χρονικού Περιθωρίου GPS</string>
     <string name="settings_net_loc_timeout">Λήξη Χρονικού Περιθωρίου Τοποθεσίας Δικτύου</string>
-    <string name="start_at_boot">Εκκίνηση του Wigle κατά την έναρξη της συσκευής</string>
+    <string name="start_at_boot">Εκκίνηση του WarStar κατά την έναρξη της συσκευής</string>
     <string name="cell_network_bands">Συχνότητες:</string>
     <string name="cell_network_status">Κατάσταση:</string>
     <string name="cell_network_brand">Μάρκα:</string>
@@ -489,13 +489,13 @@
     <string name="delete_gpx_failed">Αποτυχία διαγραφής διαδρομής.</string>
     <string name="warn_display_trunc">Η λίστα εμφάνισης υπερέβη τα όρια - απορρίπτονται οι παλαιότερες %s εγγραφές.</string>
     <string name="battery_opt_dialog_title">Βελτίωση απόδοσης σάρωσης</string>
-    <string name="battery_opt_dialog_message">Το Android περιορίζει τη σάρωση στο παρασκήνιο όταν η οθόνη είναι κλειστή. Η εξαίρεση του WiGLE Wireless από τη βελτιστοποίηση μπαταρίας βοηθά στη σταθερή σάρωση.</string>
+    <string name="battery_opt_dialog_message">Το Android περιορίζει τη σάρωση στο παρασκήνιο όταν η οθόνη είναι κλειστή. Η εξαίρεση του WarStar Wireless από τη βελτιστοποίηση μπαταρίας βοηθά στη σταθερή σάρωση.</string>
     <string name="battery_opt_open_settings">Άνοιγμα Ρυθμίσεων</string>
     <string name="battery_opt_not_now">Όχι τώρα</string>
     <string name="battery_opt_settings_title">Βελτιστοποίηση μπαταρίας</string>
     <string name="battery_opt_status_exempted">Εξαιρείται</string>
     <string name="battery_opt_status_not_exempted">Δεν εξαιρείται (κάντε κλικ για αλλαγή)</string>
-    <string name="phone_permission_detail">Το WiGLE μπορεί να κάνει σίγαση του ήχου της εφαρμογής όταν αποδέχεστε μια εισερχόμενη κλήση στη συσκευή σας. Αυτή η άδεια ενημερώνει την εφαρμογή ότι πρέπει να σταματήσει να παράγει ήχους για να μπορέσετε να μιλήσετε.</string>
+    <string name="phone_permission_detail">Το WarStar μπορεί να κάνει σίγαση του ήχου της εφαρμογής όταν αποδέχεστε μια εισερχόμενη κλήση στη συσκευή σας. Αυτή η άδεια ενημερώνει την εφαρμογή ότι πρέπει να σταματήσει να παράγει ήχους για να μπορέσετε να μιλήσετε.</string>
     <string name="database_stats">Τοπική βάση δεδομένων (στη συσκευή):</string>
     <string name="export">Εξαγωγή δεδομένων</string>
     <string name="backup_restore">Αντίγραφα ασφαλείας και επαναφορά</string>

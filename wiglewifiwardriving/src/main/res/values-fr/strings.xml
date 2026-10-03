@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats">Démarrage</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Paramètres</string>
     <string name="mapping_app_name">Plan</string>
     <string name="dashboard_app_name">Tableau de bord</string>
@@ -168,7 +168,7 @@
     <string name="have_location">Vouz avez maintenant une localisation par </string>
     <string name="wifi_jammed">Le WiFi semble bloqué, désactivez-le puis réactivez le.</string>
     <string name="battery_at">Niveau de la batterie à</string>
-    <string name="battery_postfix">pour cent, fermeture de WiGLE WiFi</string>
+    <string name="battery_postfix">pour cent, fermeture de WarStar WiFi</string>
     <string name="scan">Scan</string>
     <string name="menu_exit">Sortir</string>
     <string name="menu_settings">Réglages</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Attention, dernier scan WiFi complété</string>
     <string name="wifi_restart_2">secondes depuis. Redémarrage du WiFi.</string>
     <string name="use_wigle_tiles">Utiliser les tuiles WiGLE OSM</string>
-    <string name="wigle_service">WiGLE WiFi Service</string>
+    <string name="wigle_service">WarStar WiFi Service</string>
     <string name="disable_toast">Désactiver les pop-ups \"toast\"</string>
     <string name="menu_cluster_off">Regroupement désactivé</string>
     <string name="menu_cluster_on">Regroupement activé</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Partager</string>
     <string name="settings_gps_timeout">Temps d\'expiration GPS</string>
     <string name="settings_net_loc_timeout">Temps d\'expiration réseau</string>
-    <string name="start_at_boot">Lancer Wigle au démarrage</string>
+    <string name="start_at_boot">Lancer WarStar au démarrage</string>
     <string name="cell_network_bands">Fréquences:</string>
     <string name="cell_network_status">Statut:</string>
     <string name="cell_network_brand">Marque:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Échec de la suppression de l\'itinéraire.</string>
     <string name="warn_display_trunc">La liste d\'affichage a dépassé les limites - suppression des entrées %s les plus anciennes.</string>
     <string name="battery_opt_dialog_title">Améliorer les performances de scan</string>
-    <string name="battery_opt_dialog_message">Android limite les scans en arrière-plan par défaut lorsque l\'écran est éteint. Exempter WiGLE de l\'optimisation de batterie permet de maintenir des scans réguliers.</string>
+    <string name="battery_opt_dialog_message">Android limite les scans en arrière-plan par défaut lorsque l\'écran est éteint. Exempter WarStar de l\'optimisation de batterie permet de maintenir des scans réguliers.</string>
     <string name="battery_opt_open_settings">Ouvrir les paramètres</string>
     <string name="battery_opt_not_now">Pas maintenant</string>
     <string name="battery_opt_settings_title">Optimisation de la batterie</string>
     <string name="battery_opt_status_exempted">Exempté</string>
     <string name="battery_opt_status_not_exempted">Non exempté (appuyer pour modifier)</string>
-    <string name="phone_permission_detail">WiGLE peut couper le son de l\'application lorsque vous acceptez un appel entrant sur votre appareil. Cette autorisation indique à l\'application qu\'elle doit cesser de jouer des sons pour vous laisser parler.</string>
+    <string name="phone_permission_detail">WarStar peut couper le son de l\'application lorsque vous acceptez un appel entrant sur votre appareil. Cette autorisation indique à l\'application qu\'elle doit cesser de jouer des sons pour vous laisser parler.</string>
     <string name="database_stats">Base de données locale (sur l’appareil) :</string>
     <string name="export">Exportation des données</string>
     <string name="backup_restore">Sauvegarde et restauration</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats">Запуск</string>
-    <string name="app_name">WiGLE исследование WiFi сетей</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Настройки</string>
     <string name="mapping_app_name">Карта</string>
     <string name="dashboard_app_name">Обзор</string>
@@ -167,7 +167,7 @@
     <string name="have_location">Местоположение определено по</string>
     <string name="wifi_jammed">Похоже, Wi-Fi завис — выключите, а затем включите Wi-Fi.</string>
     <string name="battery_at">Уровень заряда батареи в</string>
-    <string name="battery_postfix">процентов, закрытие WiGLE WiFi</string>
+    <string name="battery_postfix">процентов, закрытие WarStar WiFi</string>
     <string name="scan">Сканирование</string>
     <string name="menu_exit">Выход</string>
     <string name="menu_settings">Настройки</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">Внимание, последнее сканирование Wi-Fi завершалось</string>
     <string name="wifi_restart_2">секунд назад. Перезапуск Wi-Fi.</string>
     <string name="use_wigle_tiles">Использовать плитки WiGLE OSM</string>
-    <string name="wigle_service">Служба WiGLE WiFi</string>
+    <string name="wigle_service">Служба WarStar WiFi</string>
     <string name="disable_toast">Отключить всплывающие уведомления</string>
     <string name="menu_cluster_off">Выключить кластеризацию</string>
     <string name="menu_cluster_on">Включить кластеризацию</string>
@@ -335,7 +335,7 @@
     <string name="send_to">Поделиться с</string>
     <string name="settings_gps_timeout">Тайм-аут GPS</string>
     <string name="settings_net_loc_timeout">Тайм-аут сети</string>
-    <string name="start_at_boot">Запускать Wigle при загрузке</string>
+    <string name="start_at_boot">Запускать WarStar при загрузке</string>
     <string name="cell_network_bands">частоты:</string>
     <string name="cell_network_status">Положение дел:</string>
     <string name="cell_network_brand">марка:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Не удалось удалить маршрут.</string>
     <string name="warn_display_trunc">Список отображения превысил лимиты - удаление самых старых записей %s.</string>
     <string name="battery_opt_dialog_title">Улучшить производительность сканирования</string>
-    <string name="battery_opt_dialog_message">Android по умолчанию ограничивает фоновое сканирование при выключенном экране. Исключение WiGLE из оптимизации батареи помогает поддерживать стабильное сканирование.</string>
+    <string name="battery_opt_dialog_message">Android по умолчанию ограничивает фоновое сканирование при выключенном экране. Исключение WarStar из оптимизации батареи помогает поддерживать стабильное сканирование.</string>
     <string name="battery_opt_open_settings">Открыть настройки</string>
     <string name="battery_opt_not_now">Не сейчас</string>
     <string name="battery_opt_settings_title">Оптимизация батареи</string>
     <string name="battery_opt_status_exempted">Исключено</string>
     <string name="battery_opt_status_not_exempted">Не исключено (нажмите для изменения)</string>
-    <string name="phone_permission_detail">WiGLE может приглушить звук приложения, когда вы принимаете входящий вызов на устройстве. Это разрешение сообщает приложению, что нужно прекратить воспроизведение звуков, чтобы вы могли говорить.</string>
+    <string name="phone_permission_detail">WarStar может приглушить звук приложения, когда вы принимаете входящий вызов на устройстве. Это разрешение сообщает приложению, что нужно прекратить воспроизведение звуков, чтобы вы могли говорить.</string>
     <string name="database_stats">Локальная база данных (на устройстве):</string>
     <string name="export">Экспорт данных</string>
     <string name="backup_restore">Резервное копирование и восстановление</string>

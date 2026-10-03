@@ -550,6 +550,7 @@ public final class SettingsFragment extends Fragment implements DialogListener {
         final Activity thisActivity = this.getActivity();
         if (null != thisActivity) {
             PrefsBackedCheckbox.prefBackedCheckBox(thisActivity, view, R.id.edit_showcurrent, PreferenceKeys.PREF_SHOW_CURRENT, true);
+            PrefsBackedCheckbox.prefBackedCheckBox(thisActivity, view, R.id.warstar_show_repeat, PreferenceKeys.PREF_WARSTAR_SHOW_REPEAT, true);
             PrefsBackedCheckbox.prefBackedCheckBox(thisActivity, view, R.id.display_inline_histograms,
                     PreferenceKeys.PREF_DISPLAY_INLINE_LIST_SIGNAL_HISTOGRAMS, false, value -> {
                         final MainActivity.State s = MainActivity.getStaticState();

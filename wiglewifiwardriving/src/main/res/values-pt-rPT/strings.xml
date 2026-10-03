@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">A iniciar</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Configurações</string>
     <string name="mapping_app_name">Mapa</string>
     <string name="dashboard_app_name">Painel de configurações</string>
@@ -167,7 +167,7 @@
     <string name="have_location">Agora tem a localização de</string>
     <string name="wifi_jammed">O WiFi parece congestionado, a desligar e depois ligar o WiFi.</string>
     <string name="battery_at">Nível da bateria em</string>
-    <string name="battery_postfix">por cento, a desligar o WiGLE WiFi</string>
+    <string name="battery_postfix">por cento, a desligar o WarStar WiFi</string>
     <string name="scan">Procurar</string>
     <string name="menu_exit">Sair</string>
     <string name="menu_settings">Configurações</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">Aviso, última verificação de WiFi concluída</string>
     <string name="wifi_restart_2">segundos. A reiniciar o WiFi.</string>
     <string name="use_wigle_tiles">Use blocos WiGLE OSM</string>
-    <string name="wigle_service">Serviço WiGLE WiFi</string>
+    <string name="wigle_service">Serviço WarStar WiFi</string>
     <string name="disable_toast">Desativar pop-ups de torrada</string>
     <string name="menu_cluster_off">Agrupamento desligado</string>
     <string name="menu_cluster_on">Agrupamento ligado</string>
@@ -369,7 +369,7 @@
     <string name="send_to">Partilhar a utilização</string>
     <string name="settings_gps_timeout">Tempo Limite GPS</string>
     <string name="settings_net_loc_timeout">Tempo limite da localização da rede</string>
-    <string name="start_at_boot">Inicie o Wigle na inicialização</string>
+    <string name="start_at_boot">Inicie o WarStar na inicialização</string>
     <string name="cell_network_bands">Frequências:</string>
     <string name="cell_network_status">Estado:</string>
     <string name="cell_network_brand">Marca:</string>
@@ -485,13 +485,13 @@
     <string name="delete_gpx_failed">Falha ao eliminar o percurso.</string>
     <string name="warn_display_trunc">Lista de visualização excedeu os limites - a remover as entradas %s mais antigas.</string>
     <string name="battery_opt_dialog_title">Melhorar desempenho da pesquisa</string>
-    <string name="battery_opt_dialog_message">O Android limita a pesquisa em segundo plano por predefinição quando o ecrã está desligado. Isentar o WiGLE da otimização da bateria ajuda a manter uma pesquisa consistente.</string>
+    <string name="battery_opt_dialog_message">O Android limita a pesquisa em segundo plano por predefinição quando o ecrã está desligado. Isentar o WarStar da otimização da bateria ajuda a manter uma pesquisa consistente.</string>
     <string name="battery_opt_open_settings">Abrir definições</string>
     <string name="battery_opt_not_now">Agora não</string>
     <string name="battery_opt_settings_title">Otimização da bateria</string>
     <string name="battery_opt_status_exempted">Isento</string>
     <string name="battery_opt_status_not_exempted">Não isento (toque para alterar)</string>
-    <string name="phone_permission_detail">O WiGLE pode silenciar o áudio da aplicação quando atende uma chamada recebida no dispositivo. Esta permissão informa a aplicação de que deve deixar de reproduzir sons para poder falar.</string>
+    <string name="phone_permission_detail">O WarStar pode silenciar o áudio da aplicação quando atende uma chamada recebida no dispositivo. Esta permissão informa a aplicação de que deve deixar de reproduzir sons para poder falar.</string>
     <string name="database_stats">Base de dados local (no dispositivo):</string>
     <string name="export">Exportar dados</string>
     <string name="backup_restore">Cópia de segurança e restauro</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats">Ab</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Einstellungen</string>
     <string name="mapping_app_name">OpenStreetMap</string>
     <string name="dashboard_app_name">Dashboard</string>
@@ -168,7 +168,7 @@
     <string name="have_location">Aktueller Standort aus</string>
     <string name="wifi_jammed">WLAN scheint abgestürzt, ausschalten und dann wieder an.</string>
     <string name="battery_at">Akkuladestand</string>
-    <string name="battery_postfix">Prozent, bei denen WiGLE Wifi beendet wird</string>
+    <string name="battery_postfix">Prozent, bei denen WarStar Wifi beendet wird</string>
     <string name="scan">Scan</string>
     <string name="menu_exit">Beenden</string>
     <string name="menu_settings">Einstellungen</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Achtung, neuester WLAN-Scan abgeschlossen vor</string>
     <string name="wifi_restart_2">Sekunden. WLAN-Neustart.</string>
     <string name="use_wigle_tiles">Benutze WiGLE OSM-Kacheln</string>
-    <string name="wigle_service">WiGLE Wifi Service</string>
+    <string name="wigle_service">WarStar Wifi Service</string>
     <string name="disable_toast">Deaktiviere Toast Pop-ups</string>
     <string name="menu_cluster_off">Netzwerke verteilt anzeigen</string>
     <string name="menu_cluster_on">Netzwerke gruppieren</string>
@@ -369,7 +369,7 @@
     <string name="send_to">Senden mit</string>
     <string name="settings_gps_timeout">GPS-Zeitlimit</string>
     <string name="settings_net_loc_timeout">Netzwerkstandort-Zeitlimit</string>
-    <string name="start_at_boot">Starten Sie Wigle beim Booten</string>
+    <string name="start_at_boot">Starten Sie WarStar beim Booten</string>
     <string name="cell_network_bands">Frequenzen:</string>
     <string name="cell_network_status">Status:</string>
     <string name="cell_network_brand">Marke:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Route konnte nicht gelöscht werden.</string>
     <string name="warn_display_trunc">Anzeigeliste hat Grenzen überschritten - älteste %s-Einträge werden entfernt.</string>
     <string name="battery_opt_dialog_title">Scan-Performance verbessern</string>
-    <string name="battery_opt_dialog_message">Android begrenzt Hintergrund-Scans standardmäßig bei ausgeschaltetem Bildschirm. Eine Ausnahme von der Batterieoptimierung hilft WiGLE, konstant zu scannen.</string>
+    <string name="battery_opt_dialog_message">Android begrenzt Hintergrund-Scans standardmäßig bei ausgeschaltetem Bildschirm. Eine Ausnahme von der Batterieoptimierung hilft WarStar, konstant zu scannen.</string>
     <string name="battery_opt_open_settings">Einstellungen öffnen</string>
     <string name="battery_opt_not_now">Nicht jetzt</string>
     <string name="battery_opt_settings_title">Batterieoptimierung</string>
     <string name="battery_opt_status_exempted">Ausgenommen</string>
     <string name="battery_opt_status_not_exempted">Nicht ausgenommen (tippen zum Ändern)</string>
-    <string name="phone_permission_detail">WiGLE kann die App-Audioausgabe stumm schalten, wenn Sie einen eingehenden Anruf auf Ihrem Gerät annehmen. Mit dieser Berechtigung erfährt die App, dass sie keine Töne mehr abspielen soll, damit Sie sprechen können.</string>
+    <string name="phone_permission_detail">WarStar kann die App-Audioausgabe stumm schalten, wenn Sie einen eingehenden Anruf auf Ihrem Gerät annehmen. Mit dieser Berechtigung erfährt die App, dass sie keine Töne mehr abspielen soll, damit Sie sprechen können.</string>
     <string name="database_stats">Lokale (geräteinterne) Datenbank:</string>
     <string name="export">Datenexport</string>
     <string name="backup_restore">Sichern und Wiederherstellen</string>

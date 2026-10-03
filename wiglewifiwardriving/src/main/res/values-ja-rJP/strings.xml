@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">起動</string>
-    <string name="app_name">WiGLE WiFiウォードライビング</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">設定</string>
     <string name="mapping_app_name">マップ</string>
     <string name="dashboard_app_name">ダッシュボード</string>
@@ -168,7 +168,7 @@ KMLにエクスポート</string>
     <string name="have_location">次からの場所があります：</string>
     <string name="wifi_jammed">WiFiトラフィックが詰まっているようです。WiFiを一旦オフにし、再度オンにしてください</string>
     <string name="battery_at">バッテリー残量</string>
-    <string name="battery_postfix">パーセント、WiGLEWiFiのシャットダウン</string>
+    <string name="battery_postfix">パーセント、WarStarWiFiのシャットダウン</string>
     <string name="scan">スキャン</string>
     <string name="menu_exit">終了</string>
     <string name="menu_settings">設定</string>
@@ -257,7 +257,7 @@ KMLにエクスポート</string>
     <string name="wifi_restart_1">警告、最新のWiFiスキャンが完了しました</string>
     <string name="wifi_restart_2"> 秒前。WiFiを再起動します。</string>
     <string name="use_wigle_tiles">WiGLE OSMタイルを使用する</string>
-    <string name="wigle_service">WiGLE WiFiサービス</string>
+    <string name="wigle_service">WarStar WiFiサービス</string>
     <string name="disable_toast">トースト通知を無効にする</string>
     <string name="menu_cluster_off">クラスタリングオフ</string>
     <string name="menu_cluster_on">クラスタリングオン</string>
@@ -373,7 +373,7 @@ KMLにエクスポート</string>
     <string name="send_to">....を使用して共有する</string>
     <string name="settings_gps_timeout">GPS タイムアウト</string>
     <string name="settings_net_loc_timeout">ネットワークロケーションタイムアウト</string>
-    <string name="start_at_boot">起動時に Wigle を起動します</string>
+    <string name="start_at_boot">起動時に WarStar を起動します</string>
     <string name="cell_network_bands">頻度:</string>
     <string name="cell_network_status">状態:</string>
     <string name="cell_network_brand">ブランド:</string>
@@ -489,13 +489,13 @@ KMLにエクスポート</string>
     <string name="delete_gpx_failed">ルートの削除に失敗しました。</string>
     <string name="warn_display_trunc">表示リストが制限を超えました - 最も古い%sエントリを削除しています。</string>
     <string name="battery_opt_dialog_title">スキャン性能の向上</string>
-    <string name="battery_opt_dialog_message">画面がオフのとき、Androidはデフォルトでバックグラウンドスキャンを制限します。WiGLEをバッテリ最適化から除外すると、安定したスキャンを維持できます。</string>
+    <string name="battery_opt_dialog_message">画面がオフのとき、Androidはデフォルトでバックグラウンドスキャンを制限します。WarStarをバッテリ最適化から除外すると、安定したスキャンを維持できます。</string>
     <string name="battery_opt_open_settings">設定を開く</string>
     <string name="battery_opt_not_now">後で</string>
     <string name="battery_opt_settings_title">バッテリ最適化</string>
     <string name="battery_opt_status_exempted">除外済み</string>
     <string name="battery_opt_status_not_exempted">除外されていません（タップして変更）</string>
-    <string name="phone_permission_detail">WiGLE は、端末で着信に応答するときにアプリの音声をミュートできます。この権限は、通話できるようアプリに音を止める必要があることを伝えます。</string>
+    <string name="phone_permission_detail">WarStar は、端末で着信に応答するときにアプリの音声をミュートできます。この権限は、通話できるようアプリに音を止める必要があることを伝えます。</string>
     <string name="database_stats">端末内のローカルデータベース:</string>
     <string name="export">データのエクスポート</string>
     <string name="backup_restore">バックアップと復元</string>

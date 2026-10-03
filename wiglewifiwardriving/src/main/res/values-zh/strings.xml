@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">启动</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi 位置记录</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">设定</string>
     <string name="mapping_app_name">地图</string>
     <string name="dashboard_app_name">控制面板</string>
@@ -168,7 +168,7 @@
     <string name="have_location">现在的位置来自</string>
     <string name="wifi_jammed">WiFi出现堵塞，关闭，然后又启动，Wi-Fi。</string>
     <string name="battery_at">电池电量</string>
-    <string name="battery_postfix">%，关闭WiGLE Wifi</string>
+    <string name="battery_postfix">%，关闭WarStar Wifi</string>
     <string name="scan">扫描</string>
     <string name="menu_exit">退出</string>
     <string name="menu_settings">设置</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">警告, 最新的WiFi扫描完成</string>
     <string name="wifi_restart_2">几秒前正在重启WiFi.</string>
     <string name="use_wigle_tiles">使用WiGLE OSM贴图</string>
-    <string name="wigle_service">WiGLE Wifi服务</string>
+    <string name="wigle_service">WarStar Wifi服务</string>
     <string name="disable_toast">禁用吐司弹出窗口</string>
     <string name="menu_cluster_off">集群关闭</string>
     <string name="menu_cluster_on">集群开启</string>
@@ -370,7 +370,7 @@
     <string name="send_to">分享使用</string>
     <string name="settings_gps_timeout">GPS超时</string>
     <string name="settings_net_loc_timeout">网络位置超时</string>
-    <string name="start_at_boot">在启动时启动Wigle</string>
+    <string name="start_at_boot">在启动时启动WarStar</string>
     <string name="cell_network_bands">频率：</string>
     <string name="cell_network_status">状态：</string>
     <string name="cell_network_brand">品牌：</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">删除路线失败。</string>
     <string name="warn_display_trunc">显示列表超出限制 - 正在删除最旧的 %s 条目。</string>
     <string name="battery_opt_dialog_title">提高扫描性能</string>
-    <string name="battery_opt_dialog_message">屏幕关闭时，Android 默认会限制后台扫描。将 WiGLE 排除在电池优化之外有助于保持稳定的扫描。</string>
+    <string name="battery_opt_dialog_message">屏幕关闭时，Android 默认会限制后台扫描。将 WarStar 排除在电池优化之外有助于保持稳定的扫描。</string>
     <string name="battery_opt_open_settings">打开设置</string>
     <string name="battery_opt_not_now">稍后</string>
     <string name="battery_opt_settings_title">电池优化</string>
     <string name="battery_opt_status_exempted">已豁免</string>
     <string name="battery_opt_status_not_exempted">未豁免（点击更改）</string>
-    <string name="phone_permission_detail">WiGLE 可在您于设备上接听来电时将应用音频静音。此权限会告知应用需要停止播放声音以便您通话。</string>
+    <string name="phone_permission_detail">WarStar 可在您于设备上接听来电时将应用音频静音。此权限会告知应用需要停止播放声音以便您通话。</string>
     <string name="database_stats">本地（设备上）数据库：</string>
     <string name="export">数据导出</string>
     <string name="backup_restore">备份与恢复</string>

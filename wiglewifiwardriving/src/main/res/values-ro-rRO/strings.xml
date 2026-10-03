@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="stats">Pornire</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Setări</string>
     <string name="mapping_app_name">Hartă</string>
     <string name="dashboard_app_name">Bord</string>
@@ -168,7 +168,7 @@
     <string name="have_location">Acum au locația de la</string>
     <string name="wifi_jammed">WiFi apare blocat, oprindu-se și apoi pornit, WiFi.</string>
     <string name="battery_at">Nivelul bateriei la</string>
-    <string name="battery_postfix">la sută, închiderea WiGLE WiFi</string>
+    <string name="battery_postfix">la sută, închiderea WarStar WiFi</string>
     <string name="scan">Scanează</string>
     <string name="menu_exit">Ieșire</string>
     <string name="menu_settings">Setări</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Atenție, ultima scanare WiFi a fost finalizată</string>
     <string name="wifi_restart_2">secunde în urmă. Repornirea WiFi.</string>
     <string name="use_wigle_tiles">Folosiți plăci WiGLE OSM</string>
-    <string name="wigle_service">Serviciul WiGLE WiFi</string>
+    <string name="wigle_service">Serviciul WarStar WiFi</string>
     <string name="disable_toast">Dezactivați ferestrele pop-up pentru toast</string>
     <string name="menu_cluster_off">Clustering Off</string>
     <string name="menu_cluster_on">Clustering On</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Distribuie folosind</string>
     <string name="settings_gps_timeout">Timeout GPS</string>
     <string name="settings_net_loc_timeout">Timeout pentru locație în rețea</string>
-    <string name="start_at_boot">Lansați Wigle la pornire</string>
+    <string name="start_at_boot">Lansați WarStar la pornire</string>
     <string name="cell_network_bands">Frecvențele:</string>
     <string name="cell_network_status">Stare:</string>
     <string name="cell_network_brand">Marca:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Ștergerea rutei a eșuat.</string>
     <string name="warn_display_trunc">Lista de afișare a depășit limitele - eliminare intrări %s cele mai vechi.</string>
     <string name="battery_opt_dialog_title">Îmbunătățește performanța scanării</string>
-    <string name="battery_opt_dialog_message">Android limitează scanarea în fundal implicit când ecranul este stins. Excluderea WiGLE din optimizarea bateriei ajută la menținerea unei scanări constante.</string>
+    <string name="battery_opt_dialog_message">Android limitează scanarea în fundal implicit când ecranul este stins. Excluderea WarStar din optimizarea bateriei ajută la menținerea unei scanări constante.</string>
     <string name="battery_opt_open_settings">Deschide setări</string>
     <string name="battery_opt_not_now">Nu acum</string>
     <string name="battery_opt_settings_title">Optimizare baterie</string>
     <string name="battery_opt_status_exempted">Exemptat</string>
     <string name="battery_opt_status_not_exempted">Neexemptat (apasă pentru a modifica)</string>
-    <string name="phone_permission_detail">WiGLE poate dezactiva sunetul aplicației când acceptați un apel primit pe dispozitiv. Această permisiune îi spune aplicației să nu mai redea sunete, astfel încât să puteți vorbi.</string>
+    <string name="phone_permission_detail">WarStar poate dezactiva sunetul aplicației când acceptați un apel primit pe dispozitiv. Această permisiune îi spune aplicației să nu mai redea sunete, astfel încât să puteți vorbi.</string>
     <string name="database_stats">Bază de date locală (pe dispozitiv):</string>
     <string name="export">Export de date</string>
     <string name="backup_restore">Backup și restaurare</string>
