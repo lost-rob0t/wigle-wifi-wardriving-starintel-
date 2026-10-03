@@ -46,6 +46,16 @@ public final class DeviceTags {
                 ? new JSONArray() : all(context).optJSONArray(key(type, address));
     }
 
+    public static synchronized void markTarget(Context context, String type, String address,
+                                               String targetId) throws JSONException {
+        JSONArray tags = forDevice(context, type, address);
+        for (int i = 0; i < tags.length(); i++) {
+            JSONObject existing = tags.optJSONObject(i);
+            if (existing != null && targetId.equals(existing.optString("target_document_id"))) return;
+        }
+        add(context, type, address, "Target", "⚑", COLORS[0], true, targetId);
+    }
+
     public static synchronized void add(Context context, String type, String address,
                                          String label, String icon, int color, boolean alert,
                                          String targetDocumentId) throws JSONException {
