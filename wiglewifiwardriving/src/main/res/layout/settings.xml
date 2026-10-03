@@ -131,6 +131,11 @@
         android:layout_height="wrap_content"
         android:text="@string/show_current" />
 
+    <CheckBox android:id="@+id/warstar_show_repeat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/warstar_show_repeat" />
+
     <CheckBox android:id="@+id/display_inline_histograms"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -101,6 +101,12 @@
 					tools:text="12:34:56"/>
 			</LinearLayout>
 		</LinearLayout>
+		<com.google.android.material.chip.ChipGroup
+			android:id="@+id/warstar_tags"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			app:singleLine="true" />
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="match_parent"

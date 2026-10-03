@@ -934,6 +934,7 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
         if (itemId == R.id.nav_map) return getString(R.string.mapping_app_name);
         if (itemId == R.id.nav_dash) return getString(R.string.dashboard_app_name);
         if (itemId == R.id.nav_data) return getString(R.string.data_activity_name);
+        if (itemId == R.id.nav_warstar) return getString(R.string.warstar_console);
         if (itemId == R.id.nav_search) return getString(R.string.tab_search);
         if (itemId == R.id.nav_news) return getString(R.string.news_app_name);
         if (itemId == R.id.nav_user_stats) return getString(R.string.user_stats_app_name);
@@ -979,6 +980,8 @@ public final class MainActivity extends AppCompatActivity implements TextToSpeec
             return DashboardFragment.class;
         } else if (navId == R.id.nav_data) {
             return DataFragment.class;
+        } else if (navId == R.id.nav_warstar) {
+            return net.wigle.wigleandroid.warstar.WarStarFragment.class;
         } else if (navId == R.id.nav_search) {
             if (null != mainActivity) {
                 SharedPreferences prefs = mainActivity.getSharedPreferences(PreferenceKeys.SHARED_PREFS, Context.MODE_PRIVATE);

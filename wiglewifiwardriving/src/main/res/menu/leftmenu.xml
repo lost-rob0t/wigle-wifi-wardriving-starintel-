@@ -35,6 +35,11 @@
             android:contentDescription="@string/tab_search"
             />
         <item
+            android:id="@+id/nav_warstar"
+            android:icon="@android:drawable/ic_menu_compass"
+            android:title="@string/warstar_console"
+            android:contentDescription="@string/warstar_console" />
+        <item
             android:id="@+id/nav_news"
             android:icon="@android:drawable/ic_menu_agenda"
             android:title="@string/tab_news"

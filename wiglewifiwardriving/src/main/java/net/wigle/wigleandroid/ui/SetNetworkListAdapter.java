@@ -8,6 +8,13 @@ import static net.wigle.wigleandroid.model.NetworkType.BLE;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import net.wigle.wigleandroid.warstar.DeviceTags;
+import net.wigle.wigleandroid.warstar.TagDialog;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,20 +165,31 @@ public final class SetNetworkListAdapter extends AbstractListAdapter<Network> {
 
     @Override
     public  int getCount() {
-        return networks.size();
+        if (prefs.getBoolean(PreferenceKeys.PREF_WARSTAR_SHOW_REPEAT, true)) return networks.size();
+        int visible = 0;
+        for (int i = 0; i < networks.size(); i++) {
+            Network candidate = networks.get(i);
+            if (candidate != null && candidate.isNew()) visible++;
+        }
+        return visible;
     }
 
     @Override
     public  Network getItem(int pPosition) {
-        return networks.get(pPosition);
+        if (prefs.getBoolean(PreferenceKeys.PREF_WARSTAR_SHOW_REPEAT, true)) return networks.get(pPosition);
+        for (int i = 0; i < networks.size(); i++) {
+            Network candidate = networks.get(i);
+            if (candidate != null && candidate.isNew() && pPosition-- == 0) return candidate;
+        }
+        return null;
     }
 
     @Override
     public  long getItemId(int pPosition) {
         try {
             //should i just hash the object?
-            if (null != networks.get(pPosition)) {
-                return networks.get(pPosition).getBssid().hashCode();
+            if (null != getItem(pPosition)) {
+                return getItem(pPosition).getBssid().hashCode();
             }
         } catch (final IndexOutOfBoundsException ex) {
             Logging.info("index out of bounds on getItem: " + pPosition + " ex: " + ex, ex);
@@ -289,6 +307,19 @@ public final class SetNetworkListAdapter extends AbstractListAdapter<Network> {
         }
 
         holder.ssid.setText(network.getSsid());
+        holder.tags.removeAllViews();
+        JSONArray deviceTags = DeviceTags.forDevice(getContext(), network.getType().name(), network.getBssid());
+        holder.tags.setVisibility(deviceTags.length() == 0 ? GONE : VISIBLE);
+        for (int i = 0; i < deviceTags.length(); i++) {
+            JSONObject tag = deviceTags.optJSONObject(i);
+            if (tag == null) continue;
+            Chip chip = new Chip(getContext());
+            chip.setText(tag.optString("icon") + " " + tag.optString("label"));
+            chip.setTextColor(Color.WHITE);
+            chip.setChipBackgroundColor(ColorStateList.valueOf(tag.optInt("color", DeviceTags.COLORS[0])));
+            chip.setOnClickListener(view -> TagDialog.show(getContext(), network.getType().name(), network.getBssid()));
+            holder.tags.addView(chip);
+        }
 
         final String ouiString = network.getOui(ListFragment.lameStatic.oui);
         final String sep = ouiString.length() > 0 ? " - " : "";
@@ -362,6 +393,7 @@ public final class SetNetworkListAdapter extends AbstractListAdapter<Network> {
         final TextView mac;
         final TextView chanFreq;
         final TextView detail;
+        final ChipGroup tags;
         RssiHistogramDrawable histogramDrawable;
 
         ViewHolder(final View row) {
@@ -377,6 +409,7 @@ public final class SetNetworkListAdapter extends AbstractListAdapter<Network> {
             mac = row.findViewById(R.id.mac_string);
             chanFreq = row.findViewById(R.id.chan_freq_string);
             detail = row.findViewById(R.id.detail);
+            tags = row.findViewById(R.id.warstar_tags);
         }
     }
 }

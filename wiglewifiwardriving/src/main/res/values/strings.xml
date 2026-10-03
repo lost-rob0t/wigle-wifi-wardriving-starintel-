@@ -2,8 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="empty"></string>
     <string name="stats">Starting</string>
-    <string name="app_name">WiGLE WiFi Wardriving</string>
-    <string name="list_app_name">WiGLE WiFi</string>
+    <string name="app_name">WarStar</string>
+    <string name="list_app_name">WarStar Scan</string>
     <string name="settings_app_name">Settings</string>
     <string name="mapping_app_name">Map</string>
     <string name="dashboard_app_name">Dashboard</string>
@@ -510,4 +510,6 @@
     <string name="export_alert_filter">Export alert filter</string>
     <string name="export_alert_filter_description_hint">Filter description</string>
     <string name="export_alert_filter_empty">No alert addresses or BLE manufacturer IDs to export</string>
+    <string name="warstar_show_repeat">Show repeat devices in scan list</string>
+    <string name="warstar_console">WarStar Missions</string>
 </resources>
