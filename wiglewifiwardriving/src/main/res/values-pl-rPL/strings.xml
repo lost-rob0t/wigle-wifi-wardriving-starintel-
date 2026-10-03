@@ -168,7 +168,7 @@
     <string name="have_location">Uzyskano położenie z</string>
     <string name="wifi_jammed">WiFi jest zacięte, wyłaczanie i włączanie.</string>
     <string name="battery_at">Poziom baterii wynosi</string>
-    <string name="battery_postfix">procent, zamykanie WiGLE Wifi</string>
+    <string name="battery_postfix">procent, zamykanie WarStar Wifi</string>
     <string name="scan">Skanowanie</string>
     <string name="menu_exit">Wyjście</string>
     <string name="menu_settings">Ustawienia</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Uwaga, ostatni skan WiFi zakończony</string>
     <string name="wifi_restart_2">sekund temu. Restartowanie WiFi.</string>
     <string name="use_wigle_tiles">Użyj kafelek WiGLE OSM</string>
-    <string name="wigle_service">Usługa WiGLE Wifi</string>
+    <string name="wigle_service">Usługa WarStar Wifi</string>
     <string name="disable_toast">Wyłącz powiadomienia toast</string>
     <string name="menu_cluster_off">Grupowanie wyłączone</string>
     <string name="menu_cluster_on">Grupowanie włączone</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Udostępnij za pomocą</string>
     <string name="settings_gps_timeout">Limit czasu GPS</string>
     <string name="settings_net_loc_timeout">Limit czasu lokalizacji sieci</string>
-    <string name="start_at_boot">Uruchom Wigle przy starcie</string>
+    <string name="start_at_boot">Uruchom WarStar przy starcie</string>
     <string name="cell_network_bands">Częstotliwości:</string>
     <string name="cell_network_status">Status:</string>
     <string name="cell_network_brand">Marka:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Nie udało się usunąć trasy.</string>
     <string name="warn_display_trunc">Lista wyświetlania przekroczyła limity - usuwanie najstarszych wpisów %s.</string>
     <string name="battery_opt_dialog_title">Popraw wydajność skanowania</string>
-    <string name="battery_opt_dialog_message">Android domyślnie ogranicza skanowanie w tle, gdy ekran jest wyłączony. Wyłączenie WiGLE z optymalizacji baterii pomaga utrzymać stałe skanowanie.</string>
+    <string name="battery_opt_dialog_message">Android domyślnie ogranicza skanowanie w tle, gdy ekran jest wyłączony. Wyłączenie WarStar z optymalizacji baterii pomaga utrzymać stałe skanowanie.</string>
     <string name="battery_opt_open_settings">Otwórz ustawienia</string>
     <string name="battery_opt_not_now">Nie teraz</string>
     <string name="battery_opt_settings_title">Optymalizacja baterii</string>
     <string name="battery_opt_status_exempted">Zwolnione</string>
     <string name="battery_opt_status_not_exempted">Nie zwolnione (dotknij, aby zmienić)</string>
-    <string name="phone_permission_detail">WiGLE może wyciszyć dźwięk aplikacji po odebraniu połączenia przychodzącego na urządzeniu. To uprawnienie informuje aplikację, że ma przestać odtwarzać dźwięki, aby można było rozmawiać.</string>
+    <string name="phone_permission_detail">WarStar może wyciszyć dźwięk aplikacji po odebraniu połączenia przychodzącego na urządzeniu. To uprawnienie informuje aplikację, że ma przestać odtwarzać dźwięki, aby można było rozmawiać.</string>
     <string name="database_stats">Lokalna baza danych (w urządzeniu):</string>
     <string name="export">Eksport danych</string>
     <string name="backup_restore">Kopia zapasowa i przywracanie</string>

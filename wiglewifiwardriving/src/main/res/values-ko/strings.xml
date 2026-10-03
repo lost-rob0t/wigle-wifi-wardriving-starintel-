@@ -168,7 +168,7 @@
     <string name="have_location">지금부터 위치를</string>
     <string name="wifi_jammed">와이파이는 와이파이에 다음 해제하고, 고장이 나타납니다.</string>
     <string name="battery_at">에서 배터리 수준</string>
-    <string name="battery_postfix">퍼센트 WiGLE Wifi 종료</string>
+    <string name="battery_postfix">퍼센트 WarStar Wifi 종료</string>
     <string name="scan">스캔</string>
     <string name="menu_exit">출구</string>
     <string name="menu_settings">설정</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">경고, 최신 WiFi 검사 완료</string>
     <string name="wifi_restart_2">초 전에 완료되었습니다. WiFi 다시 시작.</string>
     <string name="use_wigle_tiles">Use WiGLE OSM tiles</string>
-    <string name="wigle_service">WiGLE Wifi 서비스</string>
+    <string name="wigle_service">WarStar Wifi 서비스</string>
     <string name="disable_toast">토스트 팝업 비활성화</string>
     <string name="menu_cluster_off">클러스터링 해제</string>
     <string name="menu_cluster_on">클러스터링 켜기</string>
@@ -370,7 +370,7 @@
     <string name="send_to">다음을 사용하여 공유</string>
     <string name="settings_gps_timeout">GPS 타임 아웃</string>
     <string name="settings_net_loc_timeout">네트워크 위치 제한 시간</string>
-    <string name="start_at_boot">부팅시 Wigle 실행</string>
+    <string name="start_at_boot">부팅시 WarStar 실행</string>
     <string name="cell_network_bands">주파수:</string>
     <string name="cell_network_status">지위:</string>
     <string name="cell_network_brand">상표:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">경로 삭제에 실패했습니다.</string>
     <string name="warn_display_trunc">표시 목록이 제한을 초과했습니다 - 가장 오래된 %s 항목을 삭제합니다.</string>
     <string name="battery_opt_dialog_title">스캔 성능 개선</string>
-    <string name="battery_opt_dialog_message">화면이 꺼져 있을 때 Android는 기본적으로 백그라운드 스캔을 제한합니다. WiGLE를 배터리 최적화에서 제외하면 일관된 스캔을 유지하는 데 도움이 됩니다.</string>
+    <string name="battery_opt_dialog_message">화면이 꺼져 있을 때 Android는 기본적으로 백그라운드 스캔을 제한합니다. WarStar를 배터리 최적화에서 제외하면 일관된 스캔을 유지하는 데 도움이 됩니다.</string>
     <string name="battery_opt_open_settings">설정 열기</string>
     <string name="battery_opt_not_now">나중에</string>
     <string name="battery_opt_settings_title">배터리 최적화</string>
     <string name="battery_opt_status_exempted">제외됨</string>
     <string name="battery_opt_status_not_exempted">제외되지 않음 (탭하여 변경)</string>
-    <string name="phone_permission_detail">WiGLE은 기기에서 수신 전화를 받을 때 앱 오디오를 음소거할 수 있습니다. 이 권한은 통화할 수 있도록 앱이 소리를 재생하지 않아야 함을 알려 줍니다.</string>
+    <string name="phone_permission_detail">WarStar은 기기에서 수신 전화를 받을 때 앱 오디오를 음소거할 수 있습니다. 이 권한은 통화할 수 있도록 앱이 소리를 재생하지 않아야 함을 알려 줍니다.</string>
     <string name="database_stats">로컬(기기) 데이터베이스:</string>
     <string name="export">데이터 내보내기</string>
     <string name="backup_restore">백업 및 복원</string>

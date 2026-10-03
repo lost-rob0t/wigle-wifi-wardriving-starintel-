@@ -168,7 +168,7 @@
     <string name="have_location">Nyní mám polohu z</string>
     <string name="wifi_jammed">WiFi je zaseknutá, vypínám a zapínám Wi-Fi</string>
     <string name="battery_at">)Úroveň baterie je</string>
-    <string name="battery_postfix">procent, vypínám WiGLE Wifi</string>
+    <string name="battery_postfix">procent, vypínám WarStar Wifi</string>
     <string name="scan">Sken</string>
     <string name="menu_exit">Konec</string>
     <string name="menu_settings">Nastavení</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Upozornění, poslední WiFi sken skončil před</string>
     <string name="wifi_restart_2">sekundami. Restartuji WiFi.</string>
     <string name="use_wigle_tiles">Use WiGLE OSM tiles</string>
-    <string name="wigle_service">WiGLE Wifi Service</string>
+    <string name="wigle_service">WarStar Wifi Service</string>
     <string name="disable_toast">Vypnout toast pop-upy</string>
     <string name="menu_cluster_off">Sdružování Vypnuto</string>
     <string name="menu_cluster_on">Sdružování Zapnuto</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Sdílet pomocí</string>
     <string name="settings_gps_timeout">GPS Časový Limit</string>
     <string name="settings_net_loc_timeout">Časový limit polohy ze sítě</string>
-    <string name="start_at_boot">Spustit Wigle při startu zařízení</string>
+    <string name="start_at_boot">Spustit WarStar při startu zařízení</string>
     <string name="cell_network_bands">Frekvence:</string>
     <string name="cell_network_status">Status:</string>
     <string name="cell_network_brand">Značka:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Nepodařilo se smazat trasu.</string>
     <string name="warn_display_trunc">Seznam zobrazení překročil limity - odstraňování nejstarších položek %s.</string>
     <string name="battery_opt_dialog_title">Zlepšit výkon skenování</string>
-    <string name="battery_opt_dialog_message">Android ve výchozím nastavení omezuje skenování na pozadí při vypnuté obrazovce. Vyloučení WiGLE z optimalizace baterie pomáhá udržovat konzistentní skenování.</string>
+    <string name="battery_opt_dialog_message">Android ve výchozím nastavení omezuje skenování na pozadí při vypnuté obrazovce. Vyloučení WarStar z optimalizace baterie pomáhá udržovat konzistentní skenování.</string>
     <string name="battery_opt_open_settings">Otevřít nastavení</string>
     <string name="battery_opt_not_now">Teď ne</string>
     <string name="battery_opt_settings_title">Optimalizace baterie</string>
     <string name="battery_opt_status_exempted">Vyloučeno</string>
     <string name="battery_opt_status_not_exempted">Nevyloučeno (klepněte pro změnu)</string>
-    <string name="phone_permission_detail">WiGLE může ztlumit zvuk aplikace, když na zařízení přijmete příchozí hovor. Toto oprávnění aplikaci sdělí, že má přestat přehrávat zvuky, abyste mohli mluvit.</string>
+    <string name="phone_permission_detail">WarStar může ztlumit zvuk aplikace, když na zařízení přijmete příchozí hovor. Toto oprávnění aplikaci sdělí, že má přestat přehrávat zvuky, abyste mohli mluvit.</string>
     <string name="database_stats">Místní databáze (v zařízení):</string>
     <string name="export">Export dat</string>
     <string name="backup_restore">Zálohování a obnovení</string>

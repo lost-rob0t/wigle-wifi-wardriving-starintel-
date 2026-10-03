@@ -167,7 +167,7 @@
     <string name="have_location">Ahora tenga la ubicación de</string>
     <string name="wifi_jammed">El WiFi aparece bloqueado, apagando y, posteriormente activando WiFi.</string>
     <string name="battery_at">Nivel de batería en</string>
-    <string name="battery_postfix">por ciento, apagando WiGLE WiFi</string>
+    <string name="battery_postfix">por ciento, apagando WarStar WiFi</string>
     <string name="scan">Escanear</string>
     <string name="menu_exit">Salir</string>
     <string name="menu_settings">Configuraciones</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">Advertencia, último escaneo WiFi completado</string>
     <string name="wifi_restart_2">hace unos segundos. Reiniciando WiFi.</string>
     <string name="use_wigle_tiles">Utilice mosaicos de WiGLE OSM</string>
-    <string name="wigle_service">Servicio WiGLE WiFi</string>
+    <string name="wigle_service">Servicio WarStar WiFi</string>
     <string name="disable_toast">Deshabilitar las ventanas emergentes de tostadas</string>
     <string name="menu_cluster_off">Agrupación desactivada</string>
     <string name="menu_cluster_on">Agrupación activada</string>
@@ -369,7 +369,7 @@
     <string name="send_to">Compartir utilizando</string>
     <string name="settings_gps_timeout">Tiempo de espera del GPS</string>
     <string name="settings_net_loc_timeout">Tiempo de espera de ubicación de red</string>
-    <string name="start_at_boot">Abrir Wigle en el inicio</string>
+    <string name="start_at_boot">Abrir WarStar en el inicio</string>
     <string name="cell_network_bands">Frecuencias:</string>
     <string name="cell_network_status">Estado:</string>
     <string name="cell_network_brand">Marca:</string>
@@ -485,13 +485,13 @@
     <string name="delete_gpx_failed">No se pudo eliminar la ruta.</string>
     <string name="warn_display_trunc">La lista de visualización excedió los límites - eliminando las entradas %s más antiguas.</string>
     <string name="battery_opt_dialog_title">Mejorar el rendimiento del escaneo</string>
-    <string name="battery_opt_dialog_message">Android limita el escaneo en segundo plano por defecto cuando la pantalla está apagada. Eximir WiGLE de la optimización de batería ayuda a mantener un escaneo constante.</string>
+    <string name="battery_opt_dialog_message">Android limita el escaneo en segundo plano por defecto cuando la pantalla está apagada. Eximir WarStar de la optimización de batería ayuda a mantener un escaneo constante.</string>
     <string name="battery_opt_open_settings">Abrir configuración</string>
     <string name="battery_opt_not_now">Ahora no</string>
     <string name="battery_opt_settings_title">Optimización de batería</string>
     <string name="battery_opt_status_exempted">Eximido</string>
     <string name="battery_opt_status_not_exempted">No eximido (pulsar para cambiar)</string>
-    <string name="phone_permission_detail">WiGLE puede silenciar el audio de la aplicación cuando aceptas una llamada entrante en tu dispositivo. Este permiso indica a la aplicación que debe dejar de reproducir sonidos para que puedas hablar.</string>
+    <string name="phone_permission_detail">WarStar puede silenciar el audio de la aplicación cuando aceptas una llamada entrante en tu dispositivo. Este permiso indica a la aplicación que debe dejar de reproducir sonidos para que puedas hablar.</string>
     <string name="database_stats">Base de datos local (en el dispositivo):</string>
     <string name="export">Exportar datos</string>
     <string name="backup_restore">Copia de seguridad y restauración</string>

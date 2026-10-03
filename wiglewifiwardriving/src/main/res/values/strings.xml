@@ -169,7 +169,7 @@
     <string name="have_location">Now have location from</string>
     <string name="wifi_jammed">WiFi appears jammed, turning off, and then on, WiFi.</string>
     <string name="battery_at">Battery level at</string>
-    <string name="battery_postfix">percent, shutting down WiGLE WiFi</string>
+    <string name="battery_postfix">percent, shutting down WarStar WiFi</string>
     <string name="scan">Scan</string>
     <string name="menu_exit">Exit</string>
     <string name="menu_settings">Settings</string>
@@ -258,7 +258,7 @@
     <string name="wifi_restart_1">Warning, latest WiFi scan completed</string>
     <string name="wifi_restart_2">seconds ago. Restarting WiFi.</string>
     <string name="use_wigle_tiles">Use WiGLE OSM tiles</string>
-    <string name="wigle_service">WiGLE WiFi Service</string>
+    <string name="wigle_service">WarStar WiFi Service</string>
     <string name="disable_toast">Disable toast pop-ups</string>
     <string name="menu_cluster_off">Clustering Off</string>
     <string name="menu_cluster_on">Clustering On</string>
@@ -371,7 +371,7 @@
     <string name="send_to">Share using</string>
     <string name="settings_gps_timeout">GPS Timeout</string>
     <string name="settings_net_loc_timeout">Network Location Timeout</string>
-    <string name="start_at_boot">Launch Wigle at boot</string>
+    <string name="start_at_boot">Launch WarStar at boot</string>
     <string name="cell_network_bands">Frequencies:</string>
     <string name="cell_network_status">Status:</string>
     <string name="cell_network_brand">Brand:</string>
@@ -490,13 +490,13 @@
     <string name="delete_gpx_failed">Failed to delete route.</string>
     <string name="warn_display_trunc">Display list exceeded limits - dropping oldest %s entries.</string>
     <string name="battery_opt_dialog_title">Improve scanning performance</string>
-    <string name="battery_opt_dialog_message">Android limits background scanning by default when the screen is off. Exempting WiGLE Wireless from battery optimization helps maintain consistent scanning.</string>
+    <string name="battery_opt_dialog_message">Android limits background scanning by default when the screen is off. Exempting WarStar Wireless from battery optimization helps maintain consistent scanning.</string>
     <string name="battery_opt_open_settings">Open Settings</string>
     <string name="battery_opt_not_now">Not now</string>
     <string name="battery_opt_settings_title">Battery optimization</string>
     <string name="battery_opt_status_exempted">Exempted</string>
     <string name="battery_opt_status_not_exempted">Not exempted (click to change)</string>
-    <string name="phone_permission_detail">WiGLE can mute application audio when you accept an incoming call on your device. This permission informs the app that it needs to stop making sounds and let you talk.</string>
+    <string name="phone_permission_detail">WarStar can mute application audio when you accept an incoming call on your device. This permission informs the app that it needs to stop making sounds and let you talk.</string>
     <string name="database_stats">Local (on-device) database:</string>
     <string name="export">Data export</string>
     <string name="backup_restore">Backup and restore</string>

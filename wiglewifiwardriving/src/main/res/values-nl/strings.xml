@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Waarschuwing, laatste WiFi-scan is</string>
     <string name="wifi_restart_2">seconden geleden voltooid. WiFi herstarten.</string>
     <string name="use_wigle_tiles">Gebruik WiGLE OSM-tegels</string>
-    <string name="wigle_service">WiGLE Wifi Service</string>
+    <string name="wigle_service">WarStar Wifi Service</string>
     <string name="disable_toast">Toast pop-ups uitschakelen</string>
     <string name="menu_cluster_off">Clustering uit</string>
     <string name="menu_cluster_on">Clustering aan</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Delen via</string>
     <string name="settings_gps_timeout">GPS Time-out</string>
     <string name="settings_net_loc_timeout">Time-out netwerklocatie</string>
-    <string name="start_at_boot">Start Wigle tijdens het opstarten</string>
+    <string name="start_at_boot">Start WarStar tijdens het opstarten</string>
     <string name="cell_network_bands">Frequenties:</string>
     <string name="cell_network_status">Staat:</string>
     <string name="cell_network_brand">Merk:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Route verwijderen mislukt.</string>
     <string name="warn_display_trunc">Weergavelijst heeft limieten overschreden - oudste %s-vermeldingen verwijderen.</string>
     <string name="battery_opt_dialog_title">Scanprestaties verbeteren</string>
-    <string name="battery_opt_dialog_message">Android beperkt standaard achtergrondscans wanneer het scherm uit staat. WiGLE vrijstellen van batterijoptimalisatie helpt consistente scans te behouden.</string>
+    <string name="battery_opt_dialog_message">Android beperkt standaard achtergrondscans wanneer het scherm uit staat. WarStar vrijstellen van batterijoptimalisatie helpt consistente scans te behouden.</string>
     <string name="battery_opt_open_settings">Instellingen openen</string>
     <string name="battery_opt_not_now">Niet nu</string>
     <string name="battery_opt_settings_title">Batterijoptimalisatie</string>
     <string name="battery_opt_status_exempted">Vrijgesteld</string>
     <string name="battery_opt_status_not_exempted">Niet vrijgesteld (tik om te wijzigen)</string>
-    <string name="phone_permission_detail">WiGLE kan app-audio dempen wanneer u een inkomend gesprek op uw apparaat aanneemt. Deze machtiging laat de app weten dat er geen geluiden meer mogen spelen, zodat u kunt praten.</string>
+    <string name="phone_permission_detail">WarStar kan app-audio dempen wanneer u een inkomend gesprek op uw apparaat aanneemt. Deze machtiging laat de app weten dat er geen geluiden meer mogen spelen, zodat u kunt praten.</string>
     <string name="database_stats">Lokale (op het apparaat) database:</string>
     <string name="export">Gegevens exporteren</string>
     <string name="backup_restore">Back-up en herstel</string>

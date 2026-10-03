@@ -167,7 +167,7 @@
     <string name="have_location">अब इससे स्थान लें</string>
     <string name="wifi_jammed">WiFi जाम हो गया लगता है, बंद करें और फिर WiFi चालू करें.</string>
     <string name="battery_at">इस पर बैटरी स्तर</string>
-    <string name="battery_postfix">प्रतिशत, WiGLE WiFi बंद करना</string>
+    <string name="battery_postfix">प्रतिशत, WarStar WiFi बंद करना</string>
     <string name="scan">स्कैन करें</string>
     <string name="menu_exit">बाहर निकलें</string>
     <string name="menu_settings">सेटिंग्स</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">चेतावनी, नवीनतम WiFi का स्कैन</string>
     <string name="wifi_restart_2">सेकंड पहले पूरा हुआ. WiFi पुनरारंभ किया जा रहा है.</string>
     <string name="use_wigle_tiles">WiGLE OSM टाइल्स का उपयोग करें</string>
-    <string name="wigle_service">WiGLE WiFi सेवा</string>
+    <string name="wigle_service">WarStar WiFi सेवा</string>
     <string name="disable_toast">टोस्ट पॉप-अप को अक्षम करें</string>
     <string name="menu_cluster_off">क्लस्टरिंग बंद</string>
     <string name="menu_cluster_on">क्लस्टरिंग चालू</string>
@@ -369,7 +369,7 @@
     <string name="send_to">इसका उपयोग करके साझा करें</string>
     <string name="settings_gps_timeout">GPS समय समाप्त</string>
     <string name="settings_net_loc_timeout">नेटवर्क स्थान समय समाप्त</string>
-    <string name="start_at_boot">बूट पर Wigle लॉन्च करें</string>
+    <string name="start_at_boot">बूट पर WarStar लॉन्च करें</string>
     <string name="cell_network_bands">आवृत्तियाँ:</string>
     <string name="cell_network_status">स्थिति:</string>
     <string name="cell_network_brand">ब्रांड:</string>
@@ -485,13 +485,13 @@
     <string name="delete_gpx_failed">मार्ग हटाने में विफल।</string>
     <string name="warn_display_trunc">डिस्प्ले सूची सीमा पार कर गई - सबसे पुरानी %s प्रविष्टियाँ हटा रहा है।</string>
     <string name="battery_opt_dialog_title">स्कैन प्रदर्शन में सुधार करें</string>
-    <string name="battery_opt_dialog_message">स्क्रीन बंद होने पर Android डिफ़ॉल्ट रूप से पृष्ठभूमि स्कैन को सीमित करता है। WiGLE को बैटरी अनुकूलन से छूट देने से लगातार स्कैन बनाए रखने में मदद मिलती है।</string>
+    <string name="battery_opt_dialog_message">स्क्रीन बंद होने पर Android डिफ़ॉल्ट रूप से पृष्ठभूमि स्कैन को सीमित करता है। WarStar को बैटरी अनुकूलन से छूट देने से लगातार स्कैन बनाए रखने में मदद मिलती है।</string>
     <string name="battery_opt_open_settings">सेटिंग खोलें</string>
     <string name="battery_opt_not_now">अभी नहीं</string>
     <string name="battery_opt_settings_title">बैटरी अनुकूलन</string>
     <string name="battery_opt_status_exempted">छूट प्राप्त</string>
     <string name="battery_opt_status_not_exempted">छूट प्राप्त नहीं (बदलने के लिए टैप करें)</string>
-    <string name="phone_permission_detail">जब आप अपने डिवाइस पर आने वाली कॉल स्वीकार करते हैं तो WiGLE एप्लिकेशन का ऑडियो म्यूट कर सकता है। यह अनुमति ऐप को बताती है कि आवाज़ें बंद करनी चाहिए ताकि आप बात कर सकें।</string>
+    <string name="phone_permission_detail">जब आप अपने डिवाइस पर आने वाली कॉल स्वीकार करते हैं तो WarStar एप्लिकेशन का ऑडियो म्यूट कर सकता है। यह अनुमति ऐप को बताती है कि आवाज़ें बंद करनी चाहिए ताकि आप बात कर सकें।</string>
     <string name="database_stats">स्थानीय (डिवाइस पर) डेटाबेस:</string>
     <string name="export">डेटा निर्यात</string>
     <string name="backup_restore">बैकअप और पुनर्स्थापना</string>

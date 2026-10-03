@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.google.android.material.card.MaterialCardView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -65,6 +66,28 @@ public final class WarStarFragment extends Fragment {
         return button;
     }
 
+    private LinearLayout section(LinearLayout root, String title, String detail) {
+        MaterialCardView card = new MaterialCardView(requireContext());
+        float density = getResources().getDisplayMetrics().density;
+        card.setRadius(18 * density);
+        card.setCardBackgroundColor(0xFF242D38);
+        card.setStrokeColor(0xFF405265);
+        card.setStrokeWidth((int) density);
+        card.setCardElevation(2 * density);
+        LinearLayout.LayoutParams cardLayout = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        cardLayout.bottomMargin = (int) (16 * density);
+        root.addView(card, cardLayout);
+        LinearLayout inside = new LinearLayout(requireContext());
+        inside.setOrientation(LinearLayout.VERTICAL);
+        int inset = (int) (16 * density);
+        inside.setPadding(inset, inset, inset, inset);
+        card.addView(inside);
+        inside.addView(text(title, 18));
+        if (detail != null) inside.addView(text(detail, 13));
+        return inside;
+    }
+
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle state) {
@@ -77,19 +100,21 @@ public final class WarStarFragment extends Fragment {
         scroll.addView(column);
 
         column.addView(text("WARSTAR  /  FIELD CONSOLE", 22));
-        column.addView(text("Connect to StarIntel, sync wireless target documents, and upload collected observations.", 14));
+        column.addView(text("Capture • mark • route • share", 14));
+        LinearLayout connection = section(column, "StarIntel connection",
+                "Optional. Local scanning, tags, routes, and exports work offline.");
         url = new EditText(requireContext());
         url.setHint("https://server.example");
         url.setSingleLine(true);
         url.setText(client.url());
-        column.addView(url);
+        connection.addView(url);
         token = new EditText(requireContext());
         token.setHint("StarIntel bearer token");
         token.setSingleLine(true);
         token.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
                 android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        column.addView(token);
-        button("Connect with API key", column).setOnClickListener(view -> {
+        connection.addView(token);
+        button("Connect with API key", connection).setOnClickListener(view -> {
             String base = url.getText().toString();
             String bearer = token.getText().toString();
             token.setText("");
@@ -101,13 +126,13 @@ public final class WarStarFragment extends Fragment {
         EditText username = new EditText(requireContext());
         username.setHint("StarIntel username");
         username.setSingleLine(true);
-        column.addView(username);
+        connection.addView(username);
         EditText password = new EditText(requireContext());
         password.setHint("StarIntel password");
         password.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
                 android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        column.addView(password);
-        button("Sign in with password", column).setOnClickListener(view -> {
+        connection.addView(password);
+        button("Sign in with password", connection).setOnClickListener(view -> {
             String base = url.getText().toString();
             String user = username.getText().toString();
             String secret = password.getText().toString();
@@ -117,29 +142,35 @@ public final class WarStarFragment extends Fragment {
                 return "Connected to StarIntel";
             });
         });
-        button("Sign out", column).setOnClickListener(view -> {
+        button("Sign out", connection).setOnClickListener(view -> {
             client.signOut();
             status.setText("Signed out");
         });
-        button("Sync target documents", column).setOnClickListener(view -> run(() -> {
+        LinearLayout mission = section(column, "Target documents",
+                "Sync marked Wi-Fi and Bluetooth targets, then alert when seen.");
+        button("Sync target documents", mission).setOnClickListener(view -> run(() -> {
             JSONArray docs = client.syncTargets();
             if (getActivity() != null) getActivity().runOnUiThread(() -> showTargets(docs));
             return "Synced " + docs.length() + " target documents";
         }));
-        button("Upload next 100 observations", column).setOnClickListener(view -> run(() ->
+        LinearLayout data = section(column, "Observations",
+                "Import WiGLE data, upload by batch, or export StarIntel 0.10.1 documents.");
+        button("Upload next 100 observations", data).setOnClickListener(view -> run(() ->
                 "Uploaded " + client.uploadNextBatch() + " observations"));
-        button("Import WiGLE CSV offline", column).setOnClickListener(view -> pickCsv(721));
-        button("Import WiGLE CSV to StarIntel", column).setOnClickListener(view -> pickCsv(723));
-        button("Upload entire local database", column).setOnClickListener(view -> run(() -> {
+        button("Import WiGLE CSV offline", data).setOnClickListener(view -> pickCsv(721));
+        button("Import WiGLE CSV to StarIntel", data).setOnClickListener(view -> pickCsv(723));
+        button("Upload entire local database", data).setOnClickListener(view -> run(() -> {
             int total = 0;
             int count;
             do { count = client.uploadNextBatch(); total += count; }
             while (count > 0 && !Thread.currentThread().isInterrupted());
             return "Uploaded " + total + " local observations";
         }));
-        button("Export latest run • StarIntel 0.10.1", column).setOnClickListener(view -> chooseExport(true));
-        button("Export entire database • StarIntel 0.10.1", column).setOnClickListener(view -> chooseExport(false));
-        button("Create low coverage GPX route", column).setOnClickListener(view -> run(() -> {
+        button("Export latest run • StarIntel 0.10.1", data).setOnClickListener(view -> chooseExport(true));
+        button("Export entire database • StarIntel 0.10.1", data).setOnClickListener(view -> chooseExport(false));
+        LinearLayout route = section(column, "Coverage route",
+                "Plan waypoints in nearby cells with few observations.");
+        button("Create low coverage GPX route", route).setOnClickListener(view -> run(() -> {
             MainActivity activity = MainActivity.getMainActivity();
             if (activity == null || MainActivity.getStaticState() == null ||
                     MainActivity.getStaticState().dbHelper == null || activity.getGPSListener() == null) {
@@ -164,10 +195,10 @@ public final class WarStarFragment extends Fragment {
         }));
         status = text(client.signedIn() ? "Connected" : "Sign in to sync and upload", 14);
         column.addView(status);
-        column.addView(text("WIRELESS TARGETS", 18));
+        LinearLayout targetSection = section(column, "Wireless targets", null);
         targets = new LinearLayout(requireContext());
         targets.setOrientation(LinearLayout.VERTICAL);
-        column.addView(targets);
+        targetSection.addView(targets);
         showTargets(client.cachedTargets());
         return scroll;
     }

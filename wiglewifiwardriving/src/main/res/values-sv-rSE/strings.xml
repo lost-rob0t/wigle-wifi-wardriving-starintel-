@@ -168,7 +168,7 @@
     <string name="have_location">Har nu plats från</string>
     <string name="wifi_jammed">WiFi verkar fastnat, stäng av och sedan på, Wi-Fi.</string>
     <string name="battery_at">Batterinivå på</string>
-    <string name="battery_postfix">procent, stänger WiGLE Wifi</string>
+    <string name="battery_postfix">procent, stänger WarStar Wifi</string>
     <string name="scan">Scan</string>
     <string name="menu_exit">Avsluta</string>
     <string name="menu_settings">Inställningar</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Warning, latest WiFi scan completed</string>
     <string name="wifi_restart_2">seconds ago. Restarting WiFi.</string>
     <string name="use_wigle_tiles">Use WiGLE OSM tiles</string>
-    <string name="wigle_service">WiGLE Wifi Service</string>
+    <string name="wigle_service">WarStar Wifi Service</string>
     <string name="disable_toast">Disable toast pop-ups</string>
     <string name="menu_cluster_off">Klustering av</string>
     <string name="menu_cluster_on">Klustring på</string>
@@ -370,7 +370,7 @@
     <string name="send_to">Dela med</string>
     <string name="settings_gps_timeout">GPS Timeout</string>
     <string name="settings_net_loc_timeout">Nätverksplats Timeout</string>
-    <string name="start_at_boot">Starta Wigle vid start</string>
+    <string name="start_at_boot">Starta WarStar vid start</string>
     <string name="cell_network_bands">Frekvenser:</string>
     <string name="cell_network_status">Status:</string>
     <string name="cell_network_brand">Varumärke:</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">Kunde inte ta bort rutten.</string>
     <string name="warn_display_trunc">Visningslistan överskred gränserna - tar bort äldsta %s-poster.</string>
     <string name="battery_opt_dialog_title">Förbättra skanningsprestanda</string>
-    <string name="battery_opt_dialog_message">Android begränsar bakgrundsskanning som standard när skärmen är av. Att undanta WiGLE från batterioptimering hjälper till att upprätthålla konsekvent skanning.</string>
+    <string name="battery_opt_dialog_message">Android begränsar bakgrundsskanning som standard när skärmen är av. Att undanta WarStar från batterioptimering hjälper till att upprätthålla konsekvent skanning.</string>
     <string name="battery_opt_open_settings">Öppna inställningar</string>
     <string name="battery_opt_not_now">Inte nu</string>
     <string name="battery_opt_settings_title">Batterioptimering</string>
     <string name="battery_opt_status_exempted">Undantagen</string>
     <string name="battery_opt_status_not_exempted">Inte undantagen (tryck för att ändra)</string>
-    <string name="phone_permission_detail">WiGLE kan tysta applikationsljud när du besvarar ett inkommande samtal på enheten. Detta tillstånd talar om för appen att den ska sluta spela upp ljud så att du kan prata.</string>
+    <string name="phone_permission_detail">WarStar kan tysta applikationsljud när du besvarar ett inkommande samtal på enheten. Detta tillstånd talar om för appen att den ska sluta spela upp ljud så att du kan prata.</string>
     <string name="database_stats">Lokal (på enheten) databas:</string>
     <string name="export">Dataexport</string>
     <string name="backup_restore">Säkerhetskopiering och återställning</string>

@@ -168,7 +168,7 @@
     <string name="have_location">Now have location from</string>
     <string name="wifi_jammed">WiFi appears jammed, turning off, and then on, Wi-Fi.</string>
     <string name="battery_at">Battery level at</string>
-    <string name="battery_postfix">percent, shutting down WiGLE Wifi</string>
+    <string name="battery_postfix">percent, shutting down WarStar Wifi</string>
     <string name="scan">مسح</string>
     <string name="menu_exit">خروج</string>
     <string name="menu_settings">إعدادات</string>
@@ -257,7 +257,7 @@
     <string name="wifi_restart_1">Warning, latest WiFi scan completed</string>
     <string name="wifi_restart_2">seconds ago. Restarting WiFi.</string>
     <string name="use_wigle_tiles">Use WiGLE OSM tiles</string>
-    <string name="wigle_service">WiGLE Wifi Service</string>
+    <string name="wigle_service">WarStar Wifi Service</string>
     <string name="disable_toast">تعطيل نخب الخبز المنبثقة</string>
     <string name="menu_cluster_off">تجمع خارج</string>
     <string name="menu_cluster_on">تجمع على</string>
@@ -370,7 +370,7 @@
     <string name="send_to">مشاركة باستخدام</string>
     <string name="settings_gps_timeout">غس مهلة</string>
     <string name="settings_net_loc_timeout">نيتورك لوكاتيون تيموت</string>
-    <string name="start_at_boot">إطلاق Wigle في التمهيد</string>
+    <string name="start_at_boot">إطلاق WarStar في التمهيد</string>
     <string name="cell_network_bands">ترددات:</string>
     <string name="cell_network_status">:الحالة</string>
     <string name="cell_network_brand">:علامة تجارية</string>
@@ -486,13 +486,13 @@
     <string name="delete_gpx_failed">فشل في حذف المسار.</string>
     <string name="warn_display_trunc">قائمة العرض تجاوزت الحدود - إسقاط أقدم إدخالات %s.</string>
     <string name="battery_opt_dialog_title">تحسين أداء المسح</string>
-    <string name="battery_opt_dialog_message">يحدّ Android من المسح في الخلفية افتراضيًا عند إطفاء الشاشة. إعفاء WiGLE من تحسين البطارية يساعد في الحفاظ على مسح ثابت.</string>
+    <string name="battery_opt_dialog_message">يحدّ Android من المسح في الخلفية افتراضيًا عند إطفاء الشاشة. إعفاء WarStar من تحسين البطارية يساعد في الحفاظ على مسح ثابت.</string>
     <string name="battery_opt_open_settings">فتح الإعدادات</string>
     <string name="battery_opt_not_now">ليس الآن</string>
     <string name="battery_opt_settings_title">تحسين البطارية</string>
     <string name="battery_opt_status_exempted">معفى</string>
     <string name="battery_opt_status_not_exempted">غير معفى (انقر للتغيير)</string>
-    <string name="phone_permission_detail">يمكن لتطبيق WiGLE كتم صوت التطبيق عندما تردّ على مكالمة واردة على جهازك. يُعلم هذا الإذن التطبيق بأنه يجب أن يتوقف عن تشغيل الأصوات حتى تتمكن من التحدث.</string>
+    <string name="phone_permission_detail">يمكن لتطبيق WarStar كتم صوت التطبيق عندما تردّ على مكالمة واردة على جهازك. يُعلم هذا الإذن التطبيق بأنه يجب أن يتوقف عن تشغيل الأصوات حتى تتمكن من التحدث.</string>
     <string name="database_stats">قاعدة بيانات محلية (على الجهاز):</string>
     <string name="export">تصدير البيانات</string>
     <string name="backup_restore">النسخ الاحتياطي والاستعادة</string>

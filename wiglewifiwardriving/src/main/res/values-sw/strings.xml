@@ -167,7 +167,7 @@
     <string name="have_location">Sasa kuna mahali kutoka</string>
     <string name="wifi_jammed">WiFi inaonekana kukwama, kuzima, na kisha kuwaka, WiFi.</string>
     <string name="battery_at">Kiwango cha betri kimefika</string>
-    <string name="battery_postfix">asilimia, WiGLE WiFi inazima</string>
+    <string name="battery_postfix">asilimia, WarStar WiFi inazima</string>
     <string name="scan">Tambaza</string>
     <string name="menu_exit">Toka</string>
     <string name="menu_settings">Mipangilio</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">Onyo, tambazo la hivi karibuni la WiFi limekamilika</string>
     <string name="wifi_restart_2">sekunde zilizopita. Inawasha upya WiFi.</string>
     <string name="use_wigle_tiles">Tumia vigae vya WiGLE OSM</string>
-    <string name="wigle_service">Huduma ya WiFi ya WiGLE</string>
+    <string name="wigle_service">Huduma ya WiFi ya WarStar</string>
     <string name="disable_toast">Lemaza ibukizi za toast</string>
     <string name="menu_cluster_off">Kikundi Kinapungua</string>
     <string name="menu_cluster_on">Kikundi Kinaongezeka</string>
@@ -369,7 +369,7 @@
     <string name="send_to">Gawiza kutumia</string>
     <string name="settings_gps_timeout">Muda uliopita wa GPS</string>
     <string name="settings_net_loc_timeout">Muda uliopita wa Mahali pa Mtandao</string>
-    <string name="start_at_boot">Anzisha Wigle wakati wa kuwasha</string>
+    <string name="start_at_boot">Anzisha WarStar wakati wa kuwasha</string>
     <string name="cell_network_bands">Masafa:</string>
     <string name="cell_network_status">Hali:</string>
     <string name="cell_network_brand">Aina:</string>
@@ -485,13 +485,13 @@
     <string name="delete_gpx_failed">Imeshindwa kufuta njia.</string>
     <string name="warn_display_trunc">Orodha ya onyesho ilizidi kikomo - kuondoa maingizo %s ya zamani zaidi.</string>
     <string name="battery_opt_dialog_title">Boresha utendakazi wa uchanganuzi</string>
-    <string name="battery_opt_dialog_message">Android inazuia uchanganuzi wa mandharinyuma kwa chaguo-msingi wakati skrini iko mbali. Kuondoa WiGLE kutoka uboreshaji wa betri kunasaidia kudumisha uchanganuzi thabiti.</string>
+    <string name="battery_opt_dialog_message">Android inazuia uchanganuzi wa mandharinyuma kwa chaguo-msingi wakati skrini iko mbali. Kuondoa WarStar kutoka uboreshaji wa betri kunasaidia kudumisha uchanganuzi thabiti.</string>
     <string name="battery_opt_open_settings">Fungua mipangilio</string>
     <string name="battery_opt_not_now">Si sasa</string>
     <string name="battery_opt_settings_title">Uboreshaji wa betri</string>
     <string name="battery_opt_status_exempted">Umeondolewa</string>
     <string name="battery_opt_status_not_exempted">Haijaondolewa (gusa kubadilisha)</string>
-    <string name="phone_permission_detail">WiGLE inaweza kuzima sauti ya programu unapokubali simu inayoingia kwenye kifaa chako. Ruhusa hii inaambia programu inahitaji kuacha sauti ili uweze kuongea.</string>
+    <string name="phone_permission_detail">WarStar inaweza kuzima sauti ya programu unapokubali simu inayoingia kwenye kifaa chako. Ruhusa hii inaambia programu inahitaji kuacha sauti ili uweze kuongea.</string>
     <string name="database_stats">Hifadhidata ya ndani (kwenye kifaa):</string>
     <string name="export">Hamisha data</string>
     <string name="backup_restore">Hifadhi rudufu na kurejesha</string>

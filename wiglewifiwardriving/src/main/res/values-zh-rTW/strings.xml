@@ -167,7 +167,7 @@
     <string name="have_location">現在的位置來自</string>
     <string name="wifi_jammed">WiFi出現堵塞，關閉，然後又啟動，Wi-Fi。</string>
     <string name="battery_at">電池電量</string>
-    <string name="battery_postfix">%，關閉WiGLE Wifi</string>
+    <string name="battery_postfix">%，關閉WarStar Wifi</string>
     <string name="scan">掃描</string>
     <string name="menu_exit">退出</string>
     <string name="menu_settings">設置</string>
@@ -256,7 +256,7 @@
     <string name="wifi_restart_1">警告, 最新的WiFi掃描完成</string>
     <string name="wifi_restart_2">幾秒前正在重啟WiFi.</string>
     <string name="use_wigle_tiles">使用WiGLE OSM貼圖</string>
-    <string name="wigle_service">WiGLE Wifi服務</string>
+    <string name="wigle_service">WarStar Wifi服務</string>
     <string name="disable_toast">禁用吐司彈出窗口</string>
     <string name="menu_cluster_off">集群關閉</string>
     <string name="menu_cluster_on">集群開啟</string>
@@ -369,7 +369,7 @@
     <string name="send_to">分享使用</string>
     <string name="settings_gps_timeout">GPS超時</string>
     <string name="settings_net_loc_timeout">網絡位置超時</string>
-    <string name="start_at_boot">在啟動時啟動Wigle</string>
+    <string name="start_at_boot">在啟動時啟動WarStar</string>
     <string name="cell_network_bands">頻率：</string>
     <string name="cell_network_status">狀態：</string>
     <string name="cell_network_brand">品牌：</string>
@@ -485,13 +485,13 @@
     <string name="delete_gpx_failed">刪除路線失敗。</string>
     <string name="warn_display_trunc">顯示列表超出限制 - 正在刪除最舊的 %s 條目。</string>
     <string name="battery_opt_dialog_title">提高掃描效能</string>
-    <string name="battery_opt_dialog_message">螢幕關閉時，Android 預設會限制背景掃描。將 WiGLE 排除在電池最佳化之外有助於保持穩定的掃描。</string>
+    <string name="battery_opt_dialog_message">螢幕關閉時，Android 預設會限制背景掃描。將 WarStar 排除在電池最佳化之外有助於保持穩定的掃描。</string>
     <string name="battery_opt_open_settings">開啟設定</string>
     <string name="battery_opt_not_now">稍後</string>
     <string name="battery_opt_settings_title">電池最佳化</string>
     <string name="battery_opt_status_exempted">已豁免</string>
     <string name="battery_opt_status_not_exempted">未豁免（點擊以變更）</string>
-    <string name="phone_permission_detail">WiGLE 可在您於裝置上接聽來電時將應用程式音訊靜音。此權限會告知應用程式需停止播放聲音，以便您通話。</string>
+    <string name="phone_permission_detail">WarStar 可在您於裝置上接聽來電時將應用程式音訊靜音。此權限會告知應用程式需停止播放聲音，以便您通話。</string>
     <string name="database_stats">本機（裝置上）資料庫：</string>
     <string name="export">資料匯出</string>
     <string name="backup_restore">備份與還原</string>
