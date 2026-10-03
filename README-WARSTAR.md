@@ -22,7 +22,8 @@ console are branded WarStar.
    database, including imported observations, in bounded batches; export the
    latest run or whole wireless database as Star Language 0.10.1 NDJSON
    documents. Upload needs a compatible StarIntel ingest server add-on. A cursor
-   moves only after acknowledgment.
+   moves only after acknowledgment. Full upload restarts at the first observation;
+   incremental upload keeps a separate cursor for each server and installation.
 6. Generate a nearby low coverage GPX route. The algorithm uses a 7×7 grid of
    250 m cells around the current GPS fix, picks eight cells with the fewest
    locally stored observations, orders them by nearest neighbor, and shares

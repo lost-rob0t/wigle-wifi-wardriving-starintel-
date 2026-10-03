@@ -160,6 +160,7 @@ public final class WarStarFragment extends Fragment {
         button("Import WiGLE CSV offline", data).setOnClickListener(view -> pickCsv(721));
         button("Import WiGLE CSV to StarIntel", data).setOnClickListener(view -> pickCsv(723));
         button("Upload entire local database", data).setOnClickListener(view -> run(() -> {
+            client.restartFullUpload();
             int total = 0;
             int count;
             do { count = client.uploadNextBatch(); total += count; }

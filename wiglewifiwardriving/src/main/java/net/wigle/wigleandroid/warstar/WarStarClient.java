@@ -59,6 +59,8 @@ public final class WarStarClient {
         prefs.edit().putString(PREF_DEVICE, id).apply();
         return id;
     }
+    private String cursorKey() { return PREF_CURSOR + "." + url() + "." + installationId(); }
+    public void restartFullUpload() { prefs.edit().remove(cursorKey()).apply(); }
     public boolean signedIn() { return token != null; }
     public void signOut() { token = null; }
     public void signIn(String url, String bearer) throws IOException {
@@ -225,7 +227,7 @@ public final class WarStarClient {
         MainActivity.State state = MainActivity.getStaticState();
         if (state == null || state.dbHelper == null) throw new IOException("Scanner database is unavailable");
         DatabaseHelper db = state.dbHelper;
-        long cursorId = prefs.getLong(PREF_CURSOR, 0);
+        long cursorId = prefs.getLong(cursorKey(), 0);
         long lastId = cursorId;
         JSONArray observations = new JSONArray();
         try (Cursor rows = db.query(
@@ -261,7 +263,7 @@ public final class WarStarClient {
         if (observations.length() == 0) return 0;
         String deviceId = installationId();
         sendBatch(deviceId, observations);
-        prefs.edit().putLong(PREF_CURSOR, lastId).apply();
+        prefs.edit().putLong(cursorKey(), lastId).apply();
         return observations.length();
     }
 }
