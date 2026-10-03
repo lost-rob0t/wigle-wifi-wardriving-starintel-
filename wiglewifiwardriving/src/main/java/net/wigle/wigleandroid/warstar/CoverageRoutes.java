@@ -40,8 +40,8 @@ public final class CoverageRoutes {
             int coverage = Integer.compare(a[2], b[2]);
             if (coverage != 0) return coverage;
             int da = (a[0] - 3) * (a[0] - 3) + (a[1] - 3) * (a[1] - 3);
-            int db = (b[0] - 3) * (b[0] - 3) + (b[1] - 3) * (b[1] - 3);
-            return Integer.compare(da, db);
+            int distanceB = (b[0] - 3) * (b[0] - 3) + (b[1] - 3) * (b[1] - 3);
+            return Integer.compare(da, distanceB);
         });
         // Choose eight under-observed cells; order them from the current fix.
         List<int[]> route = new ArrayList<>(candidates.subList(0, 8));
